@@ -1,20 +1,44 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using System.Diagnostics;
 
 namespace TileWorld_Mono
 {
     /// <summary>
     /// This is the main type for your game.
     /// </summary>
-    public class Game1 : Game
+    public class Game : Microsoft.Xna.Framework.Game
     {
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
+        
+        //Camara camara;
 
-        public Game1()
+        //int ChunkSizeWidth = 64; //size of chunks in tiles
+        //int ChunkSizeHeight = 64; //size of chunks in tiles
+        //int TileSizeWidth = 32; //size of each tile in pixels
+        //int TileSizeHeight = 32; //size of each tile in pixels
+
+        int screenResWidth = 1920;
+        int screenResHeight = 1080;
+        
+        //DEBUG MODE 
+        public static bool debugMode = true;
+
+
+
+        public Game()
         {
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
+
+            graphics.PreferredBackBufferWidth = screenResWidth;
+            graphics.PreferredBackBufferHeight = screenResHeight;
+            graphics.IsFullScreen = false; 
+            graphics.ApplyChanges();
+
+
+            
         }
 
         /// <summary>
@@ -23,11 +47,22 @@ namespace TileWorld_Mono
         /// related content.  Calling base.Initialize will enumerate through any components
         /// and initialize them as well.
         /// </summary>
-        protected override void Initialize()
+        protected override void Initialize() 
         {
-            // TODO: Add your initialization logic here
-
             base.Initialize();
+
+
+
+            // TODO:: change later to save last position
+            //Vector2 playerStartPos = new Vector2(1, 1); //replace later with a player objects
+
+
+            //
+
+            //camara = new Camara( new Vector2(1,1)  );
+            //world = new World(Content, "TheWorld", ChunkSizeWidth, ChunkSizeHeight, TileSizeWidth, TileSizeHeight, playerStartPos, camara.Position);
+            GameStateManager.Instance.SetContent(Content);
+            GameStateManager.Instance.AddState("World", new WorldState(GraphicsDevice));
         }
 
         /// <summary>
@@ -40,6 +75,7 @@ namespace TileWorld_Mono
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
             // TODO: use this.Content to load your game content here
+            
         }
 
         /// <summary>
@@ -58,7 +94,14 @@ namespace TileWorld_Mono
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Update(GameTime gameTime)
         {
-            // TODO: Add your update logic here
+            //Update the input manager
+            Inputs.Update(); 
+            //Update the current state
+            GameStateManager.Instance.Update(gameTime);
+
+
+            //Camara.Location.X = (int)(100) - ;
+            //Camara.Location.Y = (int)(44) - GraphicsDevice.Viewport.Height / 2;
 
             base.Update(gameTime);
         }
@@ -69,11 +112,9 @@ namespace TileWorld_Mono
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.Clear(Color.CornflowerBlue);
-
-            // TODO: Add your drawing code here
-
             base.Draw(gameTime);
+
+            GameStateManager.Instance.Draw(spriteBatch);
         }
     }
 }

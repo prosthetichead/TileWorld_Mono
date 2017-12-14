@@ -22,7 +22,7 @@ namespace TileWorld_Mono
     /// </summary>
     public sealed partial class GamePage : Page
     {
-		readonly Game1 _game;
+		readonly Game _game;
 
 		public GamePage()
         {
@@ -30,7 +30,7 @@ namespace TileWorld_Mono
 
 			// Create the game.
 			var launchArguments = string.Empty;
-            _game = MonoGame.Framework.XamlGame<Game1>.Create(launchArguments, Window.Current.CoreWindow, swapChainPanel);
+            _game = MonoGame.Framework.XamlGame<Game>.Create(launchArguments, Window.Current.CoreWindow, swapChainPanel);
         }
     }
 }
