@@ -39,14 +39,14 @@ namespace TileWorld_Mono
 
         public override void Update(GameTime gameTime)
         {
-            if (Inputs.IsGamePadDPadDownPressed())
-                camara.position.Y++;
-            if (Inputs.IsGamePadDPadUpPressed())
-                camara.position.Y--;
-            if (Inputs.IsGamePadDPadLeftPressed())
-                camara.position.X--;
-            if (Inputs.IsGamePadDPadRightPressed())
-                camara.position.X++;
+            if (Inputs.IsActionPressed(Inputs.Action.MoveDown))
+                camara.position.Y += 0.5f;
+            if (Inputs.IsActionPressed(Inputs.Action.MoveUp))
+                camara.position.Y -= 0.5f;
+            if (Inputs.IsActionPressed(Inputs.Action.MoveLeft))
+                camara.position.X -= 0.5f;
+            if (Inputs.IsActionPressed(Inputs.Action.MoveRight))
+                camara.position.X += 0.5f;
 
 
 

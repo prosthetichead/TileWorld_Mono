@@ -23,7 +23,7 @@ namespace TileWorld_Mono
         int screenResHeight = 1080;
         
         //DEBUG MODE 
-        public static bool debugMode = true;
+        public static bool debugMode = false;
 
 
 
@@ -50,9 +50,7 @@ namespace TileWorld_Mono
         protected override void Initialize() 
         {
             base.Initialize();
-
-
-
+            
             // TODO:: change later to save last position
             //Vector2 playerStartPos = new Vector2(1, 1); //replace later with a player objects
 
@@ -61,6 +59,7 @@ namespace TileWorld_Mono
 
             //camara = new Camara( new Vector2(1,1)  );
             //world = new World(Content, "TheWorld", ChunkSizeWidth, ChunkSizeHeight, TileSizeWidth, TileSizeHeight, playerStartPos, camara.Position);
+            Inputs.InInitialize();
             GameStateManager.Instance.SetContent(Content);
             GameStateManager.Instance.AddState("World", new WorldState(GraphicsDevice));
         }
