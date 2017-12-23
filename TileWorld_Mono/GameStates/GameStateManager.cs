@@ -58,7 +58,7 @@ namespace TileWorld_Mono
                 activeStateKey = stateKey;
             }
         }
-
+        
         /// <summary>
         /// Remove a state.
         /// </summary>

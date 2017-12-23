@@ -1,6 +1,8 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using System;
 using System.Diagnostics;
+
 
 namespace TileWorld_Mono
 {
@@ -21,7 +23,8 @@ namespace TileWorld_Mono
 
         int screenResWidth = 1920;
         int screenResHeight = 1080;
-        
+        RenderTarget2D mainRenderTarget;
+
         //DEBUG MODE 
         public static bool debugMode = false;
 
@@ -31,15 +34,24 @@ namespace TileWorld_Mono
         {
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
-
+            
             graphics.PreferredBackBufferWidth = screenResWidth;
             graphics.PreferredBackBufferHeight = screenResHeight;
             graphics.IsFullScreen = false; 
             graphics.ApplyChanges();
 
+            mainRenderTarget = new RenderTarget2D(GraphicsDevice, screenResWidth, screenResHeight);
 
-            
+            this.Window.ClientSizeChanged += new System.EventHandler<System.EventArgs>(Window_ClientSizeChanged);
         }
+
+        private void Window_ClientSizeChanged(object sender, EventArgs e)
+        {
+            Debug.WriteLine("resized");
+             
+            //mainRenderTarget = new RenderTarget2D(GraphicsDevice, GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height);
+        }
+        
 
         /// <summary>
         /// Allows the game to perform any initialization it needs to before starting to run.
@@ -50,12 +62,11 @@ namespace TileWorld_Mono
         protected override void Initialize() 
         {
             base.Initialize();
-            
+
             // TODO:: change later to save last position
             //Vector2 playerStartPos = new Vector2(1, 1); //replace later with a player objects
 
-
-            //
+            
 
             //camara = new Camara( new Vector2(1,1)  );
             //world = new World(Content, "TheWorld", ChunkSizeWidth, ChunkSizeHeight, TileSizeWidth, TileSizeHeight, playerStartPos, camara.Position);
@@ -112,8 +123,15 @@ namespace TileWorld_Mono
         protected override void Draw(GameTime gameTime)
         {
             base.Draw(gameTime);
-
-            GameStateManager.Instance.Draw(spriteBatch);
+            GraphicsDevice.SetRenderTarget(mainRenderTarget);
+            GraphicsDevice.Clear(Color.Aqua); 
+            GameStateManager.Instance.Draw(spriteBatch); //draw current state
+            
+            GraphicsDevice.SetRenderTarget(null);
+            spriteBatch.Begin();
+                spriteBatch.Draw(mainRenderTarget, new Rectangle(0, 0, GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height), Color.White);
+            spriteBatch.End();
+           
         }
     }
 }

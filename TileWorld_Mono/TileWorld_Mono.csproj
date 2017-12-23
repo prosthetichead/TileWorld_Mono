@@ -100,7 +100,11 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
+    <Compile Include="FileSystem.cs" />
+    <Compile Include="GameObjects\Appearances.cs" />
+    <Compile Include="GameObjects\Character.cs" />
     <Compile Include="GameObjects\GameObject.cs" />
+    <Compile Include="GameObjects\Sprite.cs" />
     <Compile Include="GamePage.xaml.cs">
       <DependentUpon>GamePage.xaml</DependentUpon>
     </Compile>
@@ -118,6 +122,39 @@
     <Compile Include="World\World.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Content\characters\body\female\dark.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\characters\body\female\light.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\characters\body\female\orc.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\characters\body\male\dark.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\characters\body\male\light.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\characters\body\male\skeleton.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\characters\facial\female\beard\black.png" />
+    <Content Include="Content\characters\facial\female\beard\blonde.png" />
+    <Content Include="Content\characters\facial\female\beard\blue.png" />
+    <Content Include="Content\characters\facial\male\beard\black.png" />
+    <Content Include="Content\characters\facial\male\beard\blonde.png" />
+    <Content Include="Content\characters\hair\female\bunches\black.png" />
+    <Content Include="Content\characters\hair\female\bunches\redhead.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\characters\hair\female\xlong\pink.png" />
+    <Content Include="Content\characters\hair\female\xlong\pink2.png" />
+    <Content Include="Content\characters\hair\male\mohawk\white.png" />
+    <Content Include="Content\characters\hair\male\plain\black.png" />
+    <Content Include="Content\characters\hair\male\xlong\black.png" />
+    <Content Include="Content\characters\weapons\oversize\right hand\male\longsword.png" />
     <Content Include="Content\fonts\Font-PF Arma Five.spritefont">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

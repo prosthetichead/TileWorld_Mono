@@ -12,24 +12,31 @@ namespace TileWorld_Mono
     class WorldState : GameState
     {
         World world;
-        RenderTarget2D mainRenderTarget;
         Camara camara;
+        Character player;
 
         public WorldState(GraphicsDevice graphicsDevice) : base(graphicsDevice)
         {
-            mainRenderTarget = new RenderTarget2D(graphicsDevice, 1920, 1080);
             world = new World("worldname", 32, 32, 32, 32);
             camara = new Camara( new Vector2(0, 0) );
+            player = new Character(new Vector2(100,100), 64, 64);
         }
 
         public override void Initialize()
         {
             camara.zoom = 1; 
+
         }
 
         public override void LoadContent(ContentManager content)
         {
+            //load all appearance textures
+            Appearances.LoadContent(content);
+
+           
             world.LoadContent(content);
+            player.LoadContent(content);
+            
         }
 
         public override void UnloadContent()
@@ -40,31 +47,25 @@ namespace TileWorld_Mono
         public override void Update(GameTime gameTime)
         {
             if (Inputs.IsActionPressed(Inputs.Action.MoveDown))
-                camara.position.Y += 0.5f;
+                camara.position.Y += 2.5f;
             if (Inputs.IsActionPressed(Inputs.Action.MoveUp))
-                camara.position.Y -= 0.5f;
+                camara.position.Y -= 2.5f;
             if (Inputs.IsActionPressed(Inputs.Action.MoveLeft))
-                camara.position.X -= 0.5f;
+                camara.position.X -= 2.5f;
             if (Inputs.IsActionPressed(Inputs.Action.MoveRight))
-                camara.position.X += 0.5f;
+                camara.position.X += 2.5f;
 
 
-
+            player.Update(gameTime);
             world.Update(gameTime, camara.position);
         }
 
         public override void Draw(SpriteBatch spriteBatch)
         {
-            graphicsDevice.SetRenderTarget(mainRenderTarget);
-            graphicsDevice.Clear(Color.BurlyWood);
+
             spriteBatch.Begin(SpriteSortMode.FrontToBack, BlendState.AlphaBlend, SamplerState.PointWrap, null, null, null, camara.Get_transformation(graphicsDevice));
                 world.Draw(spriteBatch);
-            spriteBatch.End();
-
-            graphicsDevice.SetRenderTarget(null);
-
-            spriteBatch.Begin(samplerState: SamplerState.PointWrap);
-                spriteBatch.Draw(mainRenderTarget, new Rectangle(0, 0, graphicsDevice.Viewport.Width, graphicsDevice.Viewport.Height), Color.White );
+                player.Draw(spriteBatch);
             spriteBatch.End();
         }
     }

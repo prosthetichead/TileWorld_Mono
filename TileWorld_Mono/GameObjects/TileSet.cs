@@ -10,9 +10,9 @@ namespace TileWorld_Mono
 {
     class TileSet
     {
-        public Texture2D tileSetTexture;
-        public int tileWidth;
-        public int tileHeight;
+        private Texture2D tileSetTexture;
+        private int tileWidth;
+        private int tileHeight;
         
 
         public TileSet(ContentManager content, int tileWidth, int tileHeight, string tileSetTextureName)
@@ -22,7 +22,14 @@ namespace TileWorld_Mono
             this.tileSetTexture = content.Load<Texture2D>(tileSetTextureName);
         }
 
-       public  Rectangle getSourceRectangle(int ID)
+        public TileSet(Texture2D tileSetTexture, int tileWidth, int tileHeight)
+        {
+            this.tileWidth = tileWidth;
+            this.tileHeight = tileHeight;
+            this.tileSetTexture = tileSetTexture;
+        }
+
+        private  Rectangle GetSourceRectangle(int ID)
         {
             int rectangleX = ID % (tileSetTexture.Width / tileWidth);
             int rectangleY = ID / (tileSetTexture.Width / tileWidth);
@@ -31,19 +38,19 @@ namespace TileWorld_Mono
         }
         
 
-        public void draw(SpriteBatch spriteBatch, Vector2 position, Vector2 origin, int tileID, Color color)
+        public void Draw(SpriteBatch spriteBatch, Vector2 position, Vector2 origin, int tileID, Color color)
         {
             spriteBatch.Draw(tileSetTexture,
                     new Rectangle((int)position.X, (int)position.Y, tileWidth, tileHeight),
-                    getSourceRectangle(tileID),
+                    GetSourceRectangle(tileID),
                     color, 0f, origin, SpriteEffects.None, CalculateDepth(position));
         }
 
-        public void draw(SpriteBatch spriteBatch, Vector2 position, Vector2 origin, int tileID, Color color, float Depth)
+        public void Draw(SpriteBatch spriteBatch, Vector2 position, Vector2 origin, int tileID, Color color, float Depth)
         {
             spriteBatch.Draw(tileSetTexture,
             new Rectangle((int)position.X, (int)position.Y, tileWidth, tileHeight),
-            getSourceRectangle(tileID),
+            GetSourceRectangle(tileID),
             color, 0f, origin, SpriteEffects.None, Depth);
         }
 

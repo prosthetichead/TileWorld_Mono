@@ -221,8 +221,8 @@ namespace TileWorld_Mono
         public void Draw(SpriteBatch spriteBatch)
         {
 
-            Vector2 firstSquare = new Vector2(camaraPos.X / GroundTiles.tileWidth, camaraPos.Y / GroundTiles.tileHeight);
-            Vector2 squareOffset = new Vector2(camaraPos.X % GroundTiles.tileWidth, camaraPos.Y % GroundTiles.tileHeight);
+            Vector2 firstSquare = new Vector2(camaraPos.X / tileWidth, camaraPos.Y / tileHeight);
+            Vector2 squareOffset = new Vector2(camaraPos.X % tileWidth, camaraPos.Y % tileHeight);
             Vector2 origin = Vector2.Zero;
             int pixelPosX;
             int pixelPosY;
@@ -236,8 +236,8 @@ namespace TileWorld_Mono
                 for (int x = -1; x < 100; x++)
                 {
 
-                    pixelPosX = (x * GroundTiles.tileWidth) - (int)squareOffset.X;
-                    pixelPosY = (y * GroundTiles.tileHeight) - (int)squareOffset.Y;
+                    pixelPosX = (x * tileWidth) - (int)squareOffset.X;
+                    pixelPosY = (y * tileHeight) - (int)squareOffset.Y;
                     tilePosX = x + (int)firstSquare.X;
                     tilePosY = y + (int)firstSquare.Y;
                     Color cellColor;
@@ -253,7 +253,7 @@ namespace TileWorld_Mono
                         cellColor = cell.color;
                     
                     //Draw Cell
-                    GroundTiles.draw(spriteBatch, new Vector2(pixelPosX, pixelPosY), origin, cell.tileID, cellColor, .0001f);
+                    GroundTiles.Draw(spriteBatch, new Vector2(pixelPosX, pixelPosY), origin, cell.tileID, cellColor, .0001f);
 
                     if (Game.debugMode)
                     {
