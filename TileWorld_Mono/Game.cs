@@ -21,8 +21,8 @@ namespace TileWorld_Mono
         //int TileSizeWidth = 32; //size of each tile in pixels
         //int TileSizeHeight = 32; //size of each tile in pixels
 
-        int screenResWidth = 1920;
-        int screenResHeight = 1080;
+        int screenResWidth = 1280;
+        int screenResHeight = 720;
         RenderTarget2D mainRenderTarget;
 
         //DEBUG MODE 

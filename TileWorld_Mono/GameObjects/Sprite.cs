@@ -12,11 +12,11 @@ namespace TileWorld_Mono
 {
     public class Sprite
     {
-       
+
 
         private int spriteWidth;
         private int spriteHeight;
-        private Vector2 position = new Vector2(100,100);
+        private Vector2 position = new Vector2(100, 100);
         private Vector2 origin = Vector2.Zero;
         private float rotation = 0.0f;
         private float depth = 0.5f;
@@ -36,7 +36,12 @@ namespace TileWorld_Mono
         private Dictionary<string, List<int>> actions;
         private int currentActionFramesIndex = 0;
 
-        
+
+        /// <summary>
+        /// Change a colour using a vector4 R G B A
+        /// </summary>
+        public Vector4 Colour { get => colour.ToVector4(); set { colour =  new Color(value); } }
+
         /// <summary>
         /// Default constructor
         /// </summary>
@@ -44,6 +49,7 @@ namespace TileWorld_Mono
         /// <param name="spriteHeight">the height of the sprite on the sprite sheet</param>
         public Sprite(int spriteWidth = 64, int spriteHeight = 64)
         {
+            
             //setup the default animation 
             actions = new Dictionary<string, List<int>>();
             actions.Add("default", new List<int> { 1 });

@@ -13,12 +13,16 @@ namespace TileWorld_Mono
 {
     public abstract class GameObject
     {
-        protected Vector2 position = new Vector2(0,0);
+        protected Vector2 position;
         protected int height;
         protected int width;
         public Vector2 Position { get { return position; } set { position = value; } }
 
-        
+
+        public GameObject()
+        {
+
+        }
         public GameObject(Vector2 position, int width, int height)
         {
             this.position = position;

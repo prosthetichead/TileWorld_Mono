@@ -19,7 +19,7 @@ namespace TileWorld_Mono
         {
             world = new World("worldname", 32, 32, 32, 32);
             camara = new Camara( new Vector2(0, 0) );
-            player = new Character(new Vector2(100,100), 64, 64);
+            player = new Character();
         }
 
         public override void Initialize()
