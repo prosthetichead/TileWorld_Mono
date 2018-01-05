@@ -5,39 +5,33 @@ using System.Text;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
+using Newtonsoft.Json;
 
 namespace TileWorld_Mono
 {
+    [JsonObject(MemberSerialization.OptIn)]
     public class Cell
     {
-        //private bool collision = false;
-        //private bool liquid = false;
-        //private bool hurt = false;
-        public enum CellType { Water, Grass, Sand}
-        
-        private int tileDrawID;
-        private int cost = 0;
-        private int tileWidth = 32;
-        private int tileHeight = 32;
-        private Vector2 tilePosition;
-        private CellType cellType = CellType.Grass;
-        
-        private Color color = Color.White;
-        private Color debugColor = Color.White;
 
-        public int Cost { get { return cost; } }
-        public Vector2 PixelPosition { get { return new Vector2(tilePosition.X * tileWidth, tilePosition.Y * tileHeight); } }
+        public enum CellType { Error, Water, Sand, Grass}
+
+        [JsonProperty] private int cost = 0;
+        [JsonProperty] private Vector2 tilePosition;
+        [JsonProperty] private CellType cellType = CellType.Error;
+        [JsonProperty] private Color color = Color.White;
+        [JsonProperty] private Color debugColor = Color.White;
+
+
+        public Vector2 PixelPosition { get { return new Vector2(tilePosition.X * World.tileWidth, tilePosition.Y * World.tileHeight); } }
         public Vector2 TilePosition { get { return tilePosition; } }
-        public int TileDrawID { get { return tileDrawID; } set { tileDrawID = value; } }
+        public int TileDrawID { get { return (int)cellType; } } //change later to work out whats around it? Will need to move this to Chuck
 
 
 
-        public Cell(int tileDrawID, Vector2 tilePosition, int tileWidth, int tileHeight)
+        public Cell(CellType celltype, Vector2 tilePosition)
         {
-            this.tileWidth = tileWidth;
-            this.tileHeight = tileHeight;
             this.tilePosition = tilePosition;
-            this.tileDrawID = tileDrawID;
+            this.cellType = celltype;
         }
      
         

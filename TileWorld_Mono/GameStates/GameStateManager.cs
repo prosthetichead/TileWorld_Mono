@@ -115,19 +115,13 @@ namespace TileWorld_Mono
         /// <param name="spriteBatch"></param>
         public void Draw(SpriteBatch spriteBatch)
         {
-            try
-            {
-
+            
                 if (gameStates.TryGetValue(activeStateKey, out var gameState))
                 {
 
                     gameState.Draw(spriteBatch);
                 }
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
+            
         }
 
         /// <summary>

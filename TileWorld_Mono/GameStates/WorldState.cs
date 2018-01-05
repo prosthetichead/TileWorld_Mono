@@ -19,7 +19,7 @@ namespace TileWorld_Mono
         public WorldState(GraphicsDevice graphicsDevice) : base(graphicsDevice)
         {
             camera = new Camera(graphicsDevice.Viewport);
-            world = new World("worldname", 32, 32, 32, 32);
+            world = new World("woopwoopwoopwoop");
             player = new Player();  //TODO: load char sheet 
             character = new Character(new Vector2(50,50));
             

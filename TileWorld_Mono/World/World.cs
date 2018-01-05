@@ -5,7 +5,7 @@ using System.Text;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
-using System.Threading;
+using System.Security.Cryptography;
 
 namespace TileWorld_Mono
 {
@@ -33,6 +33,13 @@ namespace TileWorld_Mono
         public World( string worldName )
         {
             this.worldName = worldName;
+            
+            // convert world name to seed value
+            var md5Hasher = MD5.Create();
+            var hashed = md5Hasher.ComputeHash(Encoding.UTF8.GetBytes(worldName));
+            var seed = BitConverter.ToInt32(hashed, 0);
+
+            Noise2.SetSeed(seed);
 
             AddNewChunks((int)playerPos.X, (int)playerPos.Y);
         }
@@ -114,7 +121,7 @@ namespace TileWorld_Mono
                 return chunkDictonary[chunkKey].GetBackgroundCell(chunkPosX, chunkPosY);
             else
             {
-                return new Cell(0, new Vector2(X, Y), tileWidth, tileHeight);
+                return new Cell(Cell.CellType.Error, new Vector2(X, Y));
             }
         }
 
@@ -134,7 +141,7 @@ namespace TileWorld_Mono
 
            for (int i = 0; i < chunkDictonary.Count; i++)
            {
-            chunkDictonary.ElementAt(i).Value.markedForDelete = true;
+            //chunkDictonary.ElementAt(i).Value.markedForDelete = true;
            }
 
            for (int X = XStart; X <= XEnd; X =X + chunkWidth)
@@ -147,16 +154,16 @@ namespace TileWorld_Mono
 
 
 
-                    if (chunkDictonary.ContainsKey(chunkKey))
-                    {
-                        //update last used time chunk is already in the dictonary but is still needed
-                        chunkDictonary[chunkKey].UpdateLastUsed(); //also unmarks the chunk for delete.
-                    }
-                    else
-                    {
+                    if (!chunkDictonary.ContainsKey(chunkKey))
+                    { 
                         //create the chunk add the chunk to the dictonary
-                        chunkDictonary.Add(chunkKey, new Chunk(tileWidth,tileHeight,chunkWidth, chunkHeight, chunkX, chunkY, worldName));
-                        chunkDictonary[chunkKey].initialize();
+                        var chunk = new Chunk(chunkX, chunkY, worldName);
+                        var json = Newtonsoft.Json.JsonConvert.SerializeObject(chunk);
+                        chunkDictonary.Add(chunkKey, chunk); 
+
+                        //TODO: WRITE CHUCK TO HDD
+                        
+                        //chunkDictonary[chunkKey] = new Chunk(
                     }
                 }
             }   
@@ -168,13 +175,13 @@ namespace TileWorld_Mono
             KeyValuePair<string, Chunk>[] ChunkDicArray = chunkDictonary.ToArray();
             for (int i = 0; i < ChunkDicArray.Count(); i++)
             {
-                if (ChunkDicArray[i].Value.markedForDelete)
-                {
+               // if (ChunkDicArray[i].Value.markedForDelete)
+               // {
                     //write any NPC currently inside the chunk to the NPCData list inside the chunk
                     //remove the NPC from the world
                     //ChunkDicArray[i].Value.writeChunkToHDD();
                     //chunkDictonary.Remove(ChunkDicArray[i].Key);
-                }
+               // }
             }
         }
         
