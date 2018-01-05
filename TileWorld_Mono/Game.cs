@@ -13,21 +13,16 @@ namespace TileWorld_Mono
     {
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
-        
-        //Camara camara;
 
-        //int ChunkSizeWidth = 64; //size of chunks in tiles
-        //int ChunkSizeHeight = 64; //size of chunks in tiles
-        //int TileSizeWidth = 32; //size of each tile in pixels
-        //int TileSizeHeight = 32; //size of each tile in pixels
-
-        int screenResWidth = 1280;
-        int screenResHeight = 720;
+        int screenResWidth = 1280; //3840; //1920;  //1280 
+        int screenResHeight = 720; //2160; //1080; //720
         RenderTarget2D mainRenderTarget;
 
         //DEBUG MODE 
         public static bool debugMode = false;
 
+        Framerate framerate;
+        SpriteFont fontTiny;
 
 
         public Game()
@@ -43,6 +38,9 @@ namespace TileWorld_Mono
             mainRenderTarget = new RenderTarget2D(GraphicsDevice, screenResWidth, screenResHeight);
 
             this.Window.ClientSizeChanged += new System.EventHandler<System.EventArgs>(Window_ClientSizeChanged);
+             
+            
+            IsFixedTimeStep = false;
         }
 
         private void Window_ClientSizeChanged(object sender, EventArgs e)
@@ -63,16 +61,10 @@ namespace TileWorld_Mono
         {
             base.Initialize();
 
-            // TODO:: change later to save last position
-            //Vector2 playerStartPos = new Vector2(1, 1); //replace later with a player objects
-
-            
-
-            //camara = new Camara( new Vector2(1,1)  );
-            //world = new World(Content, "TheWorld", ChunkSizeWidth, ChunkSizeHeight, TileSizeWidth, TileSizeHeight, playerStartPos, camara.Position);
-            Inputs.InInitialize();
+            Inputs.Initialize();
             GameStateManager.Instance.SetContent(Content);
             GameStateManager.Instance.AddState("World", new WorldState(GraphicsDevice));
+            framerate = new Framerate(5);
         }
 
         /// <summary>
@@ -83,9 +75,9 @@ namespace TileWorld_Mono
         {
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
-
+            fontTiny = Content.Load<SpriteFont>(@"fonts\Font-PF Arma Five");
             // TODO: use this.Content to load your game content here
-            
+
         }
 
         /// <summary>
@@ -109,10 +101,9 @@ namespace TileWorld_Mono
             //Update the current state
             GameStateManager.Instance.Update(gameTime);
 
-
-            //Camara.Location.X = (int)(100) - ;
-            //Camara.Location.Y = (int)(44) - GraphicsDevice.Viewport.Height / 2;
-
+            //update framrate counter
+            framerate.Update(gameTime.ElapsedGameTime.TotalSeconds);
+            
             base.Update(gameTime);
         }
 
@@ -124,14 +115,17 @@ namespace TileWorld_Mono
         {
             base.Draw(gameTime);
             GraphicsDevice.SetRenderTarget(mainRenderTarget);
-            GraphicsDevice.Clear(Color.Aqua); 
+            GraphicsDevice.Clear(Color.Aqua);
             GameStateManager.Instance.Draw(spriteBatch); //draw current state
-            
+
             GraphicsDevice.SetRenderTarget(null);
             spriteBatch.Begin();
-                spriteBatch.Draw(mainRenderTarget, new Rectangle(0, 0, GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height), Color.White);
+            spriteBatch.Draw(mainRenderTarget, new Rectangle(0, 0, GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height), Color.White);
+            spriteBatch.DrawString(fontTiny, "FPS: " + Math.Round(framerate.framerate, 2), new Vector2(10,10), Color.Tomato, 0f, Vector2.Zero, 3f, SpriteEffects.None, 1);
+            spriteBatch.DrawString(fontTiny, "FPS: " + Math.Round(framerate.framerate, 2), new Vector2(12, 12), Color.Black, 0f, Vector2.Zero, 3f, SpriteEffects.None, 1);
+
             spriteBatch.End();
-           
+
         }
     }
 }

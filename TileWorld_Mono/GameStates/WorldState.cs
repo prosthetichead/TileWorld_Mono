@@ -12,20 +12,22 @@ namespace TileWorld_Mono
     class WorldState : GameState
     {
         World world;
-        Camara camara;
-        Character player;
+        Player player;
+        Character character;
+        public static Camera camera;
 
         public WorldState(GraphicsDevice graphicsDevice) : base(graphicsDevice)
         {
+            camera = new Camera(graphicsDevice.Viewport);
             world = new World("worldname", 32, 32, 32, 32);
-            camara = new Camara( new Vector2(0, 0) );
-            player = new Character();
+            player = new Player();  //TODO: load char sheet 
+            character = new Character(new Vector2(50,50));
+            
         }
 
         public override void Initialize()
         {
-            camara.zoom = 1; 
-
+            camera.FollowGameObject(player.Character); //follow the player around
         }
 
         public override void LoadContent(ContentManager content)
@@ -36,6 +38,7 @@ namespace TileWorld_Mono
            
             world.LoadContent(content);
             player.LoadContent(content);
+            character.LoadContent(content);
             
         }
 
@@ -46,25 +49,19 @@ namespace TileWorld_Mono
 
         public override void Update(GameTime gameTime)
         {
-            if (Inputs.IsActionPressed(Inputs.Action.MoveDown))
-                camara.position.Y += 2.5f;
-            if (Inputs.IsActionPressed(Inputs.Action.MoveUp))
-                camara.position.Y -= 2.5f;
-            if (Inputs.IsActionPressed(Inputs.Action.MoveLeft))
-                camara.position.X -= 2.5f;
-            if (Inputs.IsActionPressed(Inputs.Action.MoveRight))
-                camara.position.X += 2.5f;
-
-
+            camera.Update(gameTime);
+            character.ChangeState(Character.state.walk, Character.direction.left);
+            character.Update(gameTime);
             player.Update(gameTime);
-            world.Update(gameTime, camara.position);
+            
         }
 
         public override void Draw(SpriteBatch spriteBatch)
         {
 
-            spriteBatch.Begin(SpriteSortMode.FrontToBack, BlendState.AlphaBlend, SamplerState.PointWrap, null, null, null, camara.Get_transformation(graphicsDevice));
+            spriteBatch.Begin(SpriteSortMode.FrontToBack, BlendState.AlphaBlend, SamplerState.PointWrap, null, null, null, camera.TransformMatrix);
                 world.Draw(spriteBatch);
+                character.Draw(spriteBatch);
                 player.Draw(spriteBatch);
             spriteBatch.End();
         }

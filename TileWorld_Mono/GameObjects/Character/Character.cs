@@ -66,23 +66,27 @@ namespace TileWorld_Mono
                 {
                     sprite = new Sprite(appearance.Width, appearance.Height);
                     sprite.LoadContent(appearance.Texture);
-                    
                     sprite.SetToCharacterAnimation();
+                    sprite.SetLayer(2 + ((float)(appearanceKey.slot*1) / 1000)); //fix layering as they all share the same x,y cords so depth fucks up (hair behind body)
                 }
             }
         }
 
-        public enum state { stop, walk_left, walk_right, walk_up }
-        public enum sex { male, female, skeleton };
+        public enum state { stop, walk }
+        public enum sex { female, male, skeleton };
+        public enum direction { up, down, left, right }
         private List<AppearanceSprite> appearanceSprites;
-
         private CharacterSheet cs;
+        private Vector2 directionVector2;
+        private direction currentDirection = direction.up;
+        private state currentState;
+        
 
-        public Character(CharacterSheet characterSheet) :base()
-        {
-            cs = characterSheet;
-        }
-        public Character() : base()
+        //public Character(CharacterSheet characterSheet) : base(position, width, height)
+        //{
+        //    cs = characterSheet;
+        //}
+        public Character(Vector2 position ) : base(position, 32, 32)
         {
             cs = new CharacterSheet();
         }
@@ -100,18 +104,57 @@ namespace TileWorld_Mono
             }
 
             //set hair colour
-            foreach( var appearanceSprite in appearanceSprites.Where(i=>i.appearanceKey.slot == (int)Appearances.slot.hair && i.sprite !=null))
+           foreach( var appearanceSprite in appearanceSprites.Where(i=>i.appearanceKey.slot == (int)Appearances.slot.hair && i.sprite !=null))
                 appearanceSprite.sprite.Colour = cs.hairColour;
-            //set facial colour
+           // //set facial colour
             foreach (var appearanceSprite in appearanceSprites.Where(i => i.appearanceKey.slot == (int)Appearances.slot.facial && i.sprite != null))
-                appearanceSprite.sprite.Colour = cs.facialColour;
+               appearanceSprite.sprite.Colour = cs.facialColour;
         }
 
         public override void Update(GameTime gameTime)
         {
             foreach (var appearanceSprite in appearanceSprites.Where(i=>i.sprite != null))
             {
+                appearanceSprite.sprite.SetAnimation(currentState + "" + currentDirection); //se animation 
                 appearanceSprite.sprite.Update(gameTime, position);
+            }
+            switch (currentState)
+            {
+                case state.stop:
+                    break;
+                case state.walk:
+                    position += directionVector2;
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        public void ChangeState(state state)
+        {
+            ChangeState(state, currentDirection);
+        }
+
+        public void ChangeState(state state, direction direction)
+        {
+            currentState = state;
+            currentDirection = direction;
+            switch (currentDirection)
+            {
+                case direction.up:
+                    directionVector2 = Vector2.UnitY * -1;
+                    break;
+                case direction.down:
+                    directionVector2 = Vector2.UnitY;
+                    break;
+                case direction.left:
+                    directionVector2 = Vector2.UnitX * -1;
+                    break;
+                case direction.right:
+                    directionVector2 = Vector2.UnitX;
+                    break;
+                default:
+                    break;
             }
         }
 
@@ -122,8 +165,8 @@ namespace TileWorld_Mono
                 appearanceSprite.sprite.Draw(spriteBatch);
             }
         }
-        
 
+        
  
 
         public override void UnloadContent()

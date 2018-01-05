@@ -1,74 +1,44 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.IO;
-using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Content;
-using System.Threading;
-using System.Runtime.Serialization;
+
 namespace TileWorld_Mono
 {
 
     public struct ChunkData
     {
-        public DateTime TimeLastUsed; // last time the chunk was needed
-        public DateTime TimeCreated;
-        public int seed;
-        public string WorldName;
-        public int ChunkRootPosX;
-        public int ChunkRootPosY;
-        public int ChunkTilesWidth;
-        public int ChunkTilesHeight;
-        public Cell[,] ChunkBackGroundLayer;
-        public GameObject[,] chuckGameObjects;      
-         
+        
     }
 
     class Chunk
     {
-
-        private ChunkData chunkData;
-        public bool markedForDelete;
+        private DateTime timeLastUsed;
+        private DateTime timeCreated;
+        private DateTime timeModified;
+        private int seed;
+        private string worldName;
+        private int chunkRootPosX;
+        private int chunkRootPosY;
+        private Cell[,] cells; private bool markedForClean = false;
         private int tileWidth;
         private int tileHeight;
-
-        public Chunk(int tileWidth, int tileHeight, int chunkTilesWidth, int chunkTilesHeight, int chunkRootPosX, int chunkRootPosY, string worldName)
+        
+        public Chunk(int chunkRootPosX, int chunkRootPosY, string worldName)
         {
-            chunkData.WorldName = worldName;
-            chunkData.seed = 6666;
-            Noise2.SetSeed(chunkData.seed);
+            this.worldName = worldName;
+            seed = worldName.GetHashCode();
+            Noise2.SetSeed(seed);
 
-            chunkData.TimeLastUsed = DateTime.Now;
-            chunkData.TimeCreated = DateTime.Now;
+            timeLastUsed = DateTime.Now;
+            timeCreated = DateTime.Now;
+            timeModified = DateTime.Now;
 
-            markedForDelete = false;
 
-            chunkData.ChunkTilesWidth = chunkTilesWidth;
-            chunkData.ChunkTilesHeight = chunkTilesHeight;
-            chunkData.ChunkRootPosX = chunkRootPosX;
-            chunkData.ChunkRootPosY = chunkRootPosY;
-            this.tileWidth = tileHeight;
-            this.tileHeight = tileWidth;
+            this.chunkRootPosX = chunkRootPosX;
+            this.chunkRootPosY = chunkRootPosY;
             
-            chunkData.ChunkBackGroundLayer = new Cell[chunkData.ChunkTilesWidth, chunkData.ChunkTilesHeight];
+            cells = new Cell[World.chunkWidth, World.chunkHeight];
         }
-
-        public void initialize()
-        {
-            
-            //if (File.Exists(chunkData.ChunkRootPosX + "," + chunkData.ChunkRootPosY + ".bin"))
-            //{
-            //    readChunkFromHDD();
-           // }
-           // else
-           // {
-                createBackgroundLayer();
-           // }
-        }
-
-
+        
         private float getNoise(float factor, int x, int y, int z)
         {
             return (float)Noise2.Noise(2 * x * factor, 2 * y * factor, z * factor) + (float)Noise2.Noise(4 * x * factor, 4 * y * factor, z * factor) + (float)Noise2.Noise(8 * x * factor, 8 * y * factor, z * factor);
@@ -80,11 +50,11 @@ namespace TileWorld_Mono
         /// creates the main background layer this layer must be created before others as it determains were things will spawn and be placed
         /// </summary>
         /// <returns></returns>
-        private void createBackgroundLayer()
+        private void CreateChunk()
         {
             string chunkFileName = chunkData.WorldName + "\\" + chunkData.ChunkRootPosX + "," + chunkData.ChunkRootPosY + ".chunk";
             
-            float sand = .03f;
+            float sand = .1f;
             float water = 0f;
             float grass = 2; //it shouldnt EVER return more then 1, but it does..
 
@@ -97,110 +67,102 @@ namespace TileWorld_Mono
                 for (int x = chunkData.ChunkTilesWidth * chunkData.ChunkRootPosX; x < ((chunkData.ChunkTilesWidth * chunkData.ChunkRootPosX) + chunkData.ChunkTilesWidth); x++)
                 {
                     float noise = getNoise(factor, x, y, 100);
-                    float leftNoise = getNoise(factor, x-1, y, 100);
-                    float rightNoise = getNoise(factor, x+1, y, 100);
-                    float topNoise = getNoise(factor, x, y-1, 100);
-                    float bottomNoise = getNoise(factor, x, y+1, 100);
-                    float leftTopNoise = getNoise(factor, x - 1, y - 1, 100);
-                    float rightTopNoise = getNoise(factor, x+1, y-1, 100);
-                    float leftBottomNoise = getNoise(factor, x-1, y+1, 100);
-                    float rightBottomNoise = getNoise(factor, x+1, y+1, 100);
-                        
+                    //float leftNoise = getNoise(factor, x-1, y, 100);
+                    //float rightNoise = getNoise(factor, x+1, y, 100);
+                    //float topNoise = getNoise(factor, x, y-1, 100);
+                    //float bottomNoise = getNoise(factor, x, y+1, 100);
+                    //float leftTopNoise = getNoise(factor, x - 1, y - 1, 100);
+                    //float rightTopNoise = getNoise(factor, x+1, y-1, 100);
+                    //float leftBottomNoise = getNoise(factor, x-1, y+1, 100);
+                    //float rightBottomNoise = getNoise(factor, x+1, y+1, 100);
+
+                    //create the cell
+                    chunkData.ChunkBackGroundLayer[itX, itY] = new Cell(0, new Vector2(x, y), tileWidth, tileHeight);
                     if (noise <= water)//Water Cell
                     {
-                        chunkData.ChunkBackGroundLayer[itX, itY] = new Cell(5, false,true, false); //is a liquid
+                        chunkData.ChunkBackGroundLayer[itX, itY].TileDrawID = 5; //is a liquid
                     }
                     else if (noise <= sand)//Sand Cell
                     {
-                        chunkData.ChunkBackGroundLayer[itX, itY] = new Cell(2, false, false, false); //Normal Sand!
+                        chunkData.ChunkBackGroundLayer[itX, itY].TileDrawID = 2; //Normal Sand!
 
 
-                        if (leftNoise <= water) //left tile is water, place a left water to right sand tile
-                            chunkData.ChunkBackGroundLayer[itX, itY] = new Cell(80, false, false, false);
-                        if (rightNoise <= water) //right tile is water, place a right water to left sand tile
-                            chunkData.ChunkBackGroundLayer[itX, itY] = new Cell(82, false, false, false);
-                        if (topNoise <= water) //top tile water, place a top water to bottom sand tile
-                            chunkData.ChunkBackGroundLayer[itX, itY] = new Cell(61, false, false, false);
-                        if (bottomNoise <= water) //bottom tile water, place a bottom water to top sand tile
-                            chunkData.ChunkBackGroundLayer[itX, itY] = new Cell(101, false, false, false);
+                       // if (leftNoise <= water) //left tile is water, place a left water to right sand tile
+                       //     chunkData.ChunkBackGroundLayer[itX, itY].TileDrawID = 80;
+                       // if (rightNoise <= water) //right tile is water, place a right water to left sand tile
+                       //     chunkData.ChunkBackGroundLayer[itX, itY].TileDrawID = 82;
+                       // if (topNoise <= water) //top tile water, place a top water to bottom sand tile
+                        //    chunkData.ChunkBackGroundLayer[itX, itY].TileDrawID = 61;
+                       // if (bottomNoise <= water) //bottom tile water, place a bottom water to top sand tile
+                       //     chunkData.ChunkBackGroundLayer[itX, itY].TileDrawID = 101;
 
                         //clean up for Top Left
-                        if ((leftNoise >= water) & (topNoise >= water) & (leftTopNoise <= water))
-                            chunkData.ChunkBackGroundLayer[itX, itY] = new Cell(42, false, false, false);
-                        if ((leftNoise <= water) & (topNoise <= water) & (leftTopNoise <= water))
-                            chunkData.ChunkBackGroundLayer[itX, itY] = new Cell(60, false, false, false);
+                        //if ((leftNoise >= water) & (topNoise >= water) & (leftTopNoise <= water))
+                        //    chunkData.ChunkBackGroundLayer[itX, itY].TileDrawID = 42;
+                        //if ((leftNoise <= water) & (topNoise <= water) & (leftTopNoise <= water))
+                        //    chunkData.ChunkBackGroundLayer[itX, itY].TileDrawID = 60;
 
                         //clean up for Top Right
-                        if ((rightNoise >= water) & (topNoise >= water) & (rightTopNoise <= water))
-                            chunkData.ChunkBackGroundLayer[itX, itY] = new Cell(41, false, false, false);
-                        if ((rightNoise <= water) & (topNoise <= water) & (rightTopNoise <= water))
-                            chunkData.ChunkBackGroundLayer[itX, itY] = new Cell(62, false, false, false);
+                        //if ((rightNoise >= water) & (topNoise >= water) & (rightTopNoise <= water))
+                        //    chunkData.ChunkBackGroundLayer[itX, itY].TileDrawID = 41;
+                        //if ((rightNoise <= water) & (topNoise <= water) & (rightTopNoise <= water))
+                        //    chunkData.ChunkBackGroundLayer[itX, itY].TileDrawID = 62;
 
                         //clean up for Bottom Left
-                        if ((leftNoise >= water) & (bottomNoise >= water) & (leftBottomNoise <= water))
-                            chunkData.ChunkBackGroundLayer[itX, itY] = new Cell(22, false, false, false);
-                        if ((leftNoise <= water) & (bottomNoise <= water) & (leftBottomNoise <= water))
-                            chunkData.ChunkBackGroundLayer[itX, itY] = new Cell(100, false, false, false);
+                       // if ((leftNoise >= water) & (bottomNoise >= water) & (leftBottomNoise <= water))
+                       //     chunkData.ChunkBackGroundLayer[itX, itY].TileDrawID = 22;
+                       // if ((leftNoise <= water) & (bottomNoise <= water) & (leftBottomNoise <= water))
+                       //     chunkData.ChunkBackGroundLayer[itX, itY].TileDrawID = 100;
                         //clean up for Bottom right
-                        if ((rightNoise >= water) & (bottomNoise >= water) & (rightBottomNoise <= water))
-                            chunkData.ChunkBackGroundLayer[itX, itY] = new Cell(21, false, false, false);
-                        if ((rightNoise <= water) & (bottomNoise <= water) & (rightBottomNoise <= water))
-                            chunkData.ChunkBackGroundLayer[itX, itY] = new Cell(102, false, false, false);
+                       // if ((rightNoise >= water) & (bottomNoise >= water) & (rightBottomNoise <= water))
+                       //     chunkData.ChunkBackGroundLayer[itX, itY].TileDrawID = 21;
+                       // if ((rightNoise <= water) & (bottomNoise <= water) & (rightBottomNoise <= water))
+                       //     chunkData.ChunkBackGroundLayer[itX, itY].TileDrawID = 102;
 
 
                     }
                     else if (noise <= grass)//Grass cell
                     {
-                        chunkData.ChunkBackGroundLayer[itX, itY] = new Cell(1, false, false, false);
-                          
-
-                        if (leftNoise >= water & leftNoise <= sand) //left tile is sand
-                            chunkData.ChunkBackGroundLayer[itX, itY] = new Cell(85, false, false, false);
-                        if (rightNoise >= water & rightNoise <= sand) //right tile is sand
-                            chunkData.ChunkBackGroundLayer[itX, itY] = new Cell(83, false, false, false);
-                        if (topNoise >= water & topNoise <= sand) //top tile sand
-                            chunkData.ChunkBackGroundLayer[itX, itY] = new Cell(104, false, false, false);
-                        if (bottomNoise >= water & bottomNoise <= sand) //top tile sand
-                            chunkData.ChunkBackGroundLayer[itX, itY] = new Cell(64, false, false, false);
+                        chunkData.ChunkBackGroundLayer[itX, itY].TileDrawID = 1;
+                        //if (leftNoise >= water & leftNoise <= sand) //left tile is sand
+                        //    chunkData.ChunkBackGroundLayer[itX, itY].TileDrawID = 85;
+                       // if (rightNoise >= water & rightNoise <= sand) //right tile is sand
+                       //     chunkData.ChunkBackGroundLayer[itX, itY].TileDrawID = 83;
+                      //  if (topNoise >= water & topNoise <= sand) //top tile sand
+                      //      chunkData.ChunkBackGroundLayer[itX, itY].TileDrawID = 104;
+                      //  if (bottomNoise >= water & bottomNoise <= sand) //top tile sand
+                      //      chunkData.ChunkBackGroundLayer[itX, itY].TileDrawID = 64;
 
 
                         // top left cleanup
-                        if ((leftNoise >= water & leftNoise <= sand) & (topNoise >= water & topNoise <= sand) & (leftTopNoise >= water & leftTopNoise <= sand))
-                            chunkData.ChunkBackGroundLayer[itX, itY] = new Cell(24, false, false, false);
-                        if ((leftNoise >= sand) & (topNoise >= sand) & (leftTopNoise >= water & leftTopNoise <= sand))
-                            chunkData.ChunkBackGroundLayer[itX, itY] = new Cell(105, false, false, false);
+                        //if ((leftNoise >= water & leftNoise <= sand) & (topNoise >= water & topNoise <= sand) & (leftTopNoise >= water & leftTopNoise <= sand))
+                        //    chunkData.ChunkBackGroundLayer[itX, itY].TileDrawID = 24;
+                        //if ((leftNoise >= sand) & (topNoise >= sand) & (leftTopNoise >= water & leftTopNoise <= sand))
+                        //    chunkData.ChunkBackGroundLayer[itX, itY].TileDrawID = 105;
 
-                        //Top Right Cleanup
-                        if ((rightNoise >= water & rightNoise <= sand) & (topNoise >= water & topNoise <= sand) & (rightTopNoise >= water & rightTopNoise <= sand))
-                            chunkData.ChunkBackGroundLayer[itX, itY] = new Cell(25, false, false, false);
-                        if ((rightNoise >= sand) & (topNoise >= sand) & (rightTopNoise >= water & rightTopNoise <= sand))
-                            chunkData.ChunkBackGroundLayer[itX, itY] = new Cell(103, false, false, false);
+                        ////Top Right Cleanup
+                        //if ((rightNoise >= water & rightNoise <= sand) & (topNoise >= water & topNoise <= sand) & (rightTopNoise >= water & rightTopNoise <= sand))
+                        //    chunkData.ChunkBackGroundLayer[itX, itY].TileDrawID = 25;
+                        //if ((rightNoise >= sand) & (topNoise >= sand) & (rightTopNoise >= water & rightTopNoise <= sand))
+                        //    chunkData.ChunkBackGroundLayer[itX, itY].TileDrawID = 103;
 
-                        //Bottom Left Cleanup
-                        if ((leftNoise >= water & leftNoise <= sand) & (bottomNoise >= water & bottomNoise <= sand) & (leftBottomNoise >= water & leftBottomNoise <= sand))
-                            chunkData.ChunkBackGroundLayer[itX, itY] = new Cell(44, false, false, false);
-                        if ((leftNoise >= sand) & (bottomNoise >= sand) & (leftBottomNoise >= water & leftBottomNoise <= sand))
-                            chunkData.ChunkBackGroundLayer[itX, itY] = new Cell(65, false, false, false);
+                        ////Bottom Left Cleanup
+                        //if ((leftNoise >= water & leftNoise <= sand) & (bottomNoise >= water & bottomNoise <= sand) & (leftBottomNoise >= water & leftBottomNoise <= sand))
+                        //    chunkData.ChunkBackGroundLayer[itX, itY].TileDrawID = 44;
+                        //if ((leftNoise >= sand) & (bottomNoise >= sand) & (leftBottomNoise >= water & leftBottomNoise <= sand))
+                        //    chunkData.ChunkBackGroundLayer[itX, itY].TileDrawID = 65;
 
-                        //Bottom Right Cleanup
-                        if ((rightNoise >= water & rightNoise <= sand) & (bottomNoise >= water & bottomNoise <= sand) & (rightBottomNoise >= water & rightBottomNoise <= sand))
-                            chunkData.ChunkBackGroundLayer[itX, itY] = new Cell(45, false, false, false);
-                        if ((rightNoise >= sand) & (bottomNoise >= sand) & (rightBottomNoise >= water & rightBottomNoise <= sand))
-                            chunkData.ChunkBackGroundLayer[itX, itY] = new Cell(63, false, false, false);
+                        ////Bottom Right Cleanup
+                        //if ((rightNoise >= water & rightNoise <= sand) & (bottomNoise >= water & bottomNoise <= sand) & (rightBottomNoise >= water & rightBottomNoise <= sand))
+                        //    chunkData.ChunkBackGroundLayer[itX, itY].TileDrawID = 45;
+                        //if ((rightNoise >= sand) & (bottomNoise >= sand) & (rightBottomNoise >= water & rightBottomNoise <= sand))
+                        //    chunkData.ChunkBackGroundLayer[itX, itY].TileDrawID = 63;
                           
-                        if ((leftNoise <= water) & (topNoise <= water) & (leftTopNoise <= water))
-                            chunkData.ChunkBackGroundLayer[itX, itY] = new Cell(48, false, false, false);
-                        if ((leftNoise >= water) & (topNoise >= water) & (leftTopNoise <= water))
-                            chunkData.ChunkBackGroundLayer[itX, itY] = new Cell(44, false, false, false);
+                        //if ((leftNoise <= water) & (topNoise <= water) & (leftTopNoise <= water))
+                        //    chunkData.ChunkBackGroundLayer[itX, itY].TileDrawID = 48;
+                        //if ((leftNoise >= water) & (topNoise >= water) & (leftTopNoise <= water))
+                        //    chunkData.ChunkBackGroundLayer[itX, itY].TileDrawID = 44;
                     }
-
-                        
-                    //System.Console.WriteLine(ChunkRootPosX + ", " + ChunkRootPosY + " " + x + ", " + y);
-                    chunkData.ChunkBackGroundLayer[itX, itY].tilePosition = new Vector2(x, y);
-                    chunkData.ChunkBackGroundLayer[itX, itY].pixelPosition = new Vector2(x*tileWidth, y*tileHeight);
-                    chunkData.ChunkBackGroundLayer[itX, itY].pixelPositionCenter = new Vector2((x * tileWidth) + (tileWidth / 2), (y * tileHeight) + (tileHeight-5));
-                    chunkData.ChunkBackGroundLayer[itX, itY].chunkID = chunkData.ChunkRootPosX + ", " + chunkData.ChunkRootPosY;
-                    
                     ++itX;
                 }
                 itX = 0;
@@ -212,7 +174,7 @@ namespace TileWorld_Mono
         {
             Cell cell;
             if (x >= chunkData.ChunkTilesWidth || y >= chunkData.ChunkTilesHeight)
-                cell = new Cell(0);
+                cell = new Cell(0, new Vector2(x, y), tileWidth, tileHeight);
             else
                 cell = chunkData.ChunkBackGroundLayer[x, y];
              return cell;

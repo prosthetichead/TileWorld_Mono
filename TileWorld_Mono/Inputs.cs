@@ -30,7 +30,7 @@ namespace TileWorld_Mono
         /// <summary>
         /// Actions
         /// </summary>
-        public enum Action { MoveUp, MoveDown, MoveLeft, MoveRight, TotalActions };
+        public enum Action { MoveUp, MoveDown, MoveLeft, MoveRight };
         private static readonly string[] actionNames = { "Move Up", "Move Down", "Move Left", "Move Right" };
 
 
@@ -82,7 +82,8 @@ namespace TileWorld_Mono
         /// </summary>
         private static void ResetActionMaps()
         {
-            actionMaps = new ActionMap[(int)Action.TotalActions];
+            int numberActions = Enum.GetNames(typeof(Action)).Length;
+            actionMaps = new ActionMap[numberActions];
             //move up
             actionMaps[(int)Action.MoveUp] = new ActionMap();
             actionMaps[(int)Action.MoveUp].keyboardKeys.Add(Keys.W);
@@ -169,6 +170,7 @@ namespace TileWorld_Mono
             }
             return false;
         }
+
 #endregion
 
         //KEYBOARD REGION
@@ -194,10 +196,7 @@ namespace TileWorld_Mono
 
         //GAMEPAD REGION
         #region GamePad Region
-
-        
-        
-
+            
         private static bool IsGamePadButtonPressed(GamePadButtons gamePadKey)
         {
             switch (gamePadKey)
@@ -232,7 +231,7 @@ namespace TileWorld_Mono
         #endregion
 
 
-        public static void InInitialize()
+        public static void Initialize()
         {
             ResetActionMaps();
         }

@@ -72,7 +72,7 @@ namespace TileWorld_Mono
 
     public static class Appearances
     {
-        public enum slot { body, facial, hair};
+        public enum slot { body, hair, facial };
 
         private static Dictionary<String, Appearance>[,] appearances;
         private static int numberSexes;
@@ -99,15 +99,16 @@ namespace TileWorld_Mono
             appearances[skeleton, (int)slot.body].Add("skeleton", new Appearance("characters/body/male/skeleton", "Undead"));
 
             // MALE BODIES
+            //appearances[male, (int)slot.body].Add("no facial", new Appearance("No Facial Hair"));
             appearances[male, (int)slot.body].Add("light", new Appearance("characters/body/male/light", "Male Human Light Skin Tone"));
-            appearances[male, (int)slot.body].Add("dark", new Appearance("characters/body/male/dark", "Male Human Dark Skin Tone"));
-            appearances[male, (int)slot.body].Add("dark2", new Appearance("characters/body/male/dark2", "Male Human Dark Skin Tone 2"));
-            appearances[male, (int)slot.body].Add("tanned", new Appearance("characters/body/male/tanned", "Male Human Tanned Skin Tone"));
-            appearances[male, (int)slot.body].Add("tanned2", new Appearance("characters/body/male/tanned2", "Male Human Tanned Skin Tone 2"));
-            appearances[male, (int)slot.body].Add("darkelf", new Appearance("characters/body/male/darkelf", "Male Dark Elf"));
-            appearances[male, (int)slot.body].Add("darkelf2", new Appearance("characters/body/male/darkelf2", "Male Dark Elf 2"));
-            appearances[male, (int)slot.body].Add("orc", new Appearance("characters/body/male/orc", "Male Orc"));
-            appearances[male, (int)slot.body].Add("redorc", new Appearance("characters/body/male/red_orc", "Male Red Orc"));
+            //appearances[male, (int)slot.body].Add("dark", new Appearance("characters/body/male/dark", "Male Human Dark Skin Tone"));
+            //appearances[male, (int)slot.body].Add("dark2", new Appearance("characters/body/male/dark2", "Male Human Dark Skin Tone 2"));
+            //appearances[male, (int)slot.body].Add("tanned", new Appearance("characters/body/male/tanned", "Male Human Tanned Skin Tone"));
+            //appearances[male, (int)slot.body].Add("tanned2", new Appearance("characters/body/male/tanned2", "Male Human Tanned Skin Tone 2"));
+            //appearances[male, (int)slot.body].Add("darkelf", new Appearance("characters/body/male/darkelf", "Male Dark Elf"));
+            //appearances[male, (int)slot.body].Add("darkelf2", new Appearance("characters/body/male/darkelf2", "Male Dark Elf 2"));
+            //appearances[male, (int)slot.body].Add("orc", new Appearance("characters/body/male/orc", "Male Orc"));
+            //appearances[male, (int)slot.body].Add("redorc", new Appearance("characters/body/male/red_orc", "Male Red Orc"));
             
             // FEMALE BODIES
             appearances[female, (int)slot.body].Add("light", new Appearance("characters/body/female/light", "Female Human Light Skin Tone"));
@@ -121,63 +122,85 @@ namespace TileWorld_Mono
             appearances[female, (int)slot.body].Add("redorc", new Appearance("characters/body/female/red_orc", "Female Red Orc"));
 
             // MALE FACIAL
-            appearances[male, (int)slot.facial].Add("no facial", new Appearance("Male No Facial Hair"));
-            appearances[male, (int)slot.facial].Add("beard", new Appearance("characters/facial/beard", "Beard"));
-            appearances[male, (int)slot.facial].Add("big stache", new Appearance("characters/facial/bigstache", "Big Stache"));
-            appearances[male, (int)slot.facial].Add("fiveoclock", new Appearance("characters/facial/fiveoclock", "Five O'Clock Shadow"));
-            appearances[male, (int)slot.facial].Add("frenchstache", new Appearance("characters/facial/frenchstache", "French Stache"));
-            appearances[male, (int)slot.facial].Add("mustache", new Appearance("characters/facial/mustache", "Mustache"));
+           // appearances[male, (int)slot.facial].Add("no facial", new Appearance("No Facial Hair"));
+            appearances[male, (int)slot.facial].Add("beard", new Appearance("characters/facial/male/beard/black", "Beard"));
+            appearances[male, (int)slot.facial].Add("big stache", new Appearance("characters/facial/male/bigstache", "Big Stache"));
+            appearances[male, (int)slot.facial].Add("fiveoclock", new Appearance("characters/facial/male/fiveoclock", "Five O'Clock Shadow"));
+            appearances[male, (int)slot.facial].Add("frenchstache", new Appearance("characters/facial/male/frenchstache", "French Stache"));
+            appearances[male, (int)slot.facial].Add("mustache", new Appearance("characters/facial/male/mustache", "Mustache"));
             
             // FEMALE FACIAL
             appearances[female, (int)slot.facial].Add("no facial", new Appearance("No Facial Hair"));
-            appearances[female, (int)slot.facial].Add("beard", appearances[male, (int)slot.facial]["beard"]);
-            appearances[female, (int)slot.facial].Add("big stache", appearances[male, (int)slot.facial]["big stache"]);
-            appearances[female, (int)slot.facial].Add("fiveoclock", appearances[male, (int)slot.facial]["fiveoclock"]);
-            appearances[female, (int)slot.facial].Add("frenchstache", appearances[male, (int)slot.facial]["frenchstache"]);
-            appearances[female, (int)slot.facial].Add("mustache", appearances[male, (int)slot.facial]["mustache"]);
 
             // skeleton FACIAL
             appearances[skeleton, (int)slot.facial].Add("no facial", new Appearance("No Facial Hair"));
 
             // MALE HAIR
             appearances[male, (int)slot.hair].Add("no hair", new Appearance("No Hair"));
-            appearances[male, (int)slot.hair].Add("bangs", new Appearance("characters/hair/bangs", "Bangs"));
-            appearances[male, (int)slot.hair].Add("bangs long", new Appearance("characters/hair/bangslong", "Bangs Long"));
-            appearances[male, (int)slot.hair].Add("bangs long 2", new Appearance("characters/hair/bangslong2", "Bangs Long 2"));
-            appearances[male, (int)slot.hair].Add("bangs short", new Appearance("characters/hair/bangsshort", "Bangs Short"));
-            appearances[male, (int)slot.hair].Add("bed head", new Appearance("characters/hair/bedhead", "BedHead"));
-            appearances[male, (int)slot.hair].Add("bunches", new Appearance("characters/hair/bunches", "Bunches"));
-            appearances[male, (int)slot.hair].Add("jewfro", new Appearance("characters/hair/jewfro", "Jewfro"));
-            appearances[male, (int)slot.hair].Add("long", new Appearance("characters/hair/long", "Long"));
-            appearances[male, (int)slot.hair].Add("long hawk", new Appearance("characters/hair/longhawk", "Long Hawk"));
-            appearances[male, (int)slot.hair].Add("long knot", new Appearance("characters/hair/longknot", "Long Knot"));
-            appearances[male, (int)slot.hair].Add("loose", new Appearance("characters/hair/loose", "Loose"));
-            appearances[male, (int)slot.hair].Add("messy1", new Appearance("characters/hair/messy1", "Messy"));
-            appearances[male, (int)slot.hair].Add("messy2", new Appearance("characters/hair/messy2", "Messy 2"));
-            appearances[male, (int)slot.hair].Add("mohawk", new Appearance("characters/hair/mohawk", "Mohawk"));
-            appearances[male, (int)slot.hair].Add("page", new Appearance("characters/hair/page", "Page"));
-            appearances[male, (int)slot.hair].Add("page2", new Appearance("characters/hair/page2", "Page 2"));
-            appearances[male, (int)slot.hair].Add("parted", new Appearance("characters/hair/parted", "Parted"));
-            appearances[male, (int)slot.hair].Add("pixie", new Appearance("characters/hair/pixie", "Pixie"));
-            appearances[male, (int)slot.hair].Add("plain", new Appearance("characters/hair/plain", "plain"));
-            appearances[male, (int)slot.hair].Add("ponytail", new Appearance("characters/hair/ponytail", "Pony Tail"));
-            appearances[male, (int)slot.hair].Add("ponytail2", new Appearance("characters/hair/ponytail2", "Pony Tail 2"));
-            appearances[male, (int)slot.hair].Add("princess", new Appearance("characters/hair/princess", "Princess"));
-            appearances[male, (int)slot.hair].Add("shorthawk", new Appearance("characters/hair/shorthawk", "Short Hawk"));
-            appearances[male, (int)slot.hair].Add("shortknot", new Appearance("characters/hair/shortknot", "Short Knot"));
-            appearances[male, (int)slot.hair].Add("shoulderr", new Appearance("characters/hair/shoulderr", "Shoulder"));
-            appearances[male, (int)slot.hair].Add("swoop", new Appearance("characters/hair/swoop", "Swoop"));
-            appearances[male, (int)slot.hair].Add("unkempt", new Appearance("characters/hair/unkempt", "unkempt"));
-            appearances[male, (int)slot.hair].Add("xlong", new Appearance("characters/hair/xlong", "Extra Long"));
-            appearances[male, (int)slot.hair].Add("xlong knot", new Appearance("characters/hair/xlongknot", "Extra Long knot"));
+            appearances[male, (int)slot.hair].Add("bangs", new Appearance("characters/hair/male/bangs", "Bangs"));
+            appearances[male, (int)slot.hair].Add("bangs long", new Appearance("characters/hair/male/bangslong", "Bangs Long"));
+            appearances[male, (int)slot.hair].Add("bangs long 2", new Appearance("characters/hair/male/bangslong2", "Bangs Long 2"));
+            appearances[male, (int)slot.hair].Add("bangs short", new Appearance("characters/hair/male/bangsshort", "Bangs Short"));
+            appearances[male, (int)slot.hair].Add("bed head", new Appearance("characters/hair/male/bedhead", "BedHead"));
+            appearances[male, (int)slot.hair].Add("bunches", new Appearance("characters/hair/male/bunches", "Bunches"));
+            appearances[male, (int)slot.hair].Add("jewfro", new Appearance("characters/hair/male/jewfro", "Jewfro"));
+            appearances[male, (int)slot.hair].Add("long", new Appearance("characters/hair/male/long", "Long"));
+            appearances[male, (int)slot.hair].Add("long hawk", new Appearance("characters/hair/male/longhawk", "Long Hawk"));
+            appearances[male, (int)slot.hair].Add("long knot", new Appearance("characters/hair/male/longknot", "Long Knot"));
+            appearances[male, (int)slot.hair].Add("loose", new Appearance("characters/hair/male/loose", "Loose"));
+            appearances[male, (int)slot.hair].Add("messy1", new Appearance("characters/hair/male/messy1", "Messy"));
+            appearances[male, (int)slot.hair].Add("messy2", new Appearance("characters/hair/male/messy2", "Messy 2"));
+            appearances[male, (int)slot.hair].Add("mohawk", new Appearance("characters/hair/male/mohawk", "Mohawk"));
+            appearances[male, (int)slot.hair].Add("page", new Appearance("characters/hair/male/page", "Page"));
+            appearances[male, (int)slot.hair].Add("page2", new Appearance("characters/hair/male/page2", "Page 2"));
+            appearances[male, (int)slot.hair].Add("parted", new Appearance("characters/hair/male/parted", "Parted"));
+            appearances[male, (int)slot.hair].Add("pixie", new Appearance("characters/hair/male/pixie", "Pixie"));
+            appearances[male, (int)slot.hair].Add("plain", new Appearance("characters/hair/male/plain", "plain"));
+            appearances[male, (int)slot.hair].Add("ponytail", new Appearance("characters/hair/male/ponytail", "Pony Tail"));
+            appearances[male, (int)slot.hair].Add("ponytail2", new Appearance("characters/hair/male/ponytail2", "Pony Tail 2"));
+            appearances[male, (int)slot.hair].Add("princess", new Appearance("characters/hair/male/princess", "Princess"));
+            appearances[male, (int)slot.hair].Add("shorthawk", new Appearance("characters/hair/male/shorthawk", "Short Hawk"));
+            appearances[male, (int)slot.hair].Add("shortknot", new Appearance("characters/hair/male/shortknot", "Short Knot"));
+            appearances[male, (int)slot.hair].Add("shoulderr", new Appearance("characters/hair/male/shoulderr", "Shoulder"));
+            appearances[male, (int)slot.hair].Add("swoop", new Appearance("characters/hair/male/swoop", "Swoop"));
+            appearances[male, (int)slot.hair].Add("unkempt", new Appearance("characters/hair/male/unkempt", "unkempt"));
+            appearances[male, (int)slot.hair].Add("xlong", new Appearance("characters/hair/male/xlong", "Extra Long"));
+            appearances[male, (int)slot.hair].Add("xlong knot", new Appearance("characters/hair/male/xlongknot", "Extra Long knot"));
             // FEMALE HAIR
-            foreach (var a in appearances[male, (int)slot.hair])
-                appearances[female, (int)slot.hair].Add(a.Key, a.Value);
+            appearances[female, (int)slot.hair].Add("bangs", new Appearance("characters/hair/female/bangs", "Bangs"));
+            appearances[female, (int)slot.hair].Add("bangs long", new Appearance("characters/hair/female/bangslong", "Bangs Long"));
+            appearances[female, (int)slot.hair].Add("bangs long 2", new Appearance("characters/hair/female/bangslong2", "Bangs Long 2"));
+            appearances[female, (int)slot.hair].Add("bangs short", new Appearance("characters/hair/female/bangsshort", "Bangs Short"));
+            appearances[female, (int)slot.hair].Add("bed head", new Appearance("characters/hair/female/bedhead", "BedHead"));
+            appearances[female, (int)slot.hair].Add("bunches", new Appearance("characters/hair/female/bunches", "Bunches"));
+            appearances[female, (int)slot.hair].Add("jewfro", new Appearance("characters/hair/female/jewfro", "Jewfro"));
+            appearances[female, (int)slot.hair].Add("long", new Appearance("characters/hair/female/long", "Long"));
+            appearances[female, (int)slot.hair].Add("long hawk", new Appearance("characters/hair/female/longhawk", "Long Hawk"));
+            appearances[female, (int)slot.hair].Add("long knot", new Appearance("characters/hair/female/longknot", "Long Knot"));
+            appearances[female, (int)slot.hair].Add("loose", new Appearance("characters/hair/female/loose", "Loose"));
+            appearances[female, (int)slot.hair].Add("messy1", new Appearance("characters/hair/female/messy1", "Messy"));
+            appearances[female, (int)slot.hair].Add("messy2", new Appearance("characters/hair/female/messy2", "Messy 2"));
+            appearances[female, (int)slot.hair].Add("mohawk", new Appearance("characters/hair/female/mohawk", "Mohawk"));
+            appearances[female, (int)slot.hair].Add("page", new Appearance("characters/hair/female/page", "Page"));
+            appearances[female, (int)slot.hair].Add("page2", new Appearance("characters/hair/female/page2", "Page 2"));
+            appearances[female, (int)slot.hair].Add("parted", new Appearance("characters/hair/female/parted", "Parted"));
+            appearances[female, (int)slot.hair].Add("pixie", new Appearance("characters/hair/female/pixie", "Pixie"));
+            appearances[female, (int)slot.hair].Add("plain", new Appearance("characters/hair/female/plain", "plain"));
+            appearances[female, (int)slot.hair].Add("ponytail", new Appearance("characters/hair/female/ponytail", "Pony Tail"));
+            appearances[female, (int)slot.hair].Add("ponytail2", new Appearance("characters/hair/female/ponytail2", "Pony Tail 2"));
+            appearances[female, (int)slot.hair].Add("princess", new Appearance("characters/hair/female/princess", "Princess"));
+            appearances[female, (int)slot.hair].Add("shorthawk", new Appearance("characters/hair/female/shorthawk", "Short Hawk"));
+            appearances[female, (int)slot.hair].Add("shortknot", new Appearance("characters/hair/female/shortknot", "Short Knot"));
+            appearances[female, (int)slot.hair].Add("shoulderr", new Appearance("characters/hair/female/shoulderr", "Shoulder"));
+            appearances[female, (int)slot.hair].Add("swoop", new Appearance("characters/hair/female/swoop", "Swoop"));
+            appearances[female, (int)slot.hair].Add("unkempt", new Appearance("characters/hair/female/unkempt", "unkempt"));
+            appearances[female, (int)slot.hair].Add("xlong", new Appearance("characters/hair/female/xlong", "Extra Long"));
+            appearances[female, (int)slot.hair].Add("xlong knot", new Appearance("characters/hair/female/xlongknot", "Extra Long knot"));
             //skeleton Hair
             appearances[skeleton, (int)slot.hair].Add("no hair", new Appearance("No Hair"));
-            appearances[skeleton, (int)slot.hair].Add("mohawk", new Appearance("characters/hair/mohawk", "Mohawk"));
-            appearances[skeleton, (int)slot.hair].Add("messy1", new Appearance("characters/hair/messy1", "Messy"));
-            appearances[skeleton, (int)slot.hair].Add("messy2", new Appearance("characters/hair/messy2", "Messy 2"));
+            appearances[skeleton, (int)slot.hair].Add("mohawk", new Appearance("characters/hair/male/mohawk", "Mohawk"));
+            appearances[skeleton, (int)slot.hair].Add("messy1", new Appearance("characters/hair/male/messy1", "Messy"));
+            appearances[skeleton, (int)slot.hair].Add("messy2", new Appearance("characters/hair/male/messy2", "Messy 2"));
         }
 
         public static void LoadContent(ContentManager content)

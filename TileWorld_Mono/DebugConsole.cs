@@ -7,20 +7,13 @@ using Microsoft.Xna.Framework.Content;
 
 namespace TileWorld_Mono
 {
-    class Player
+    class DebugConsole
     {
-        Character character;
 
-        public Player()
-        {
-            character = new Character();
-        }
-        public void LoadContent()
-        {
-        }
+
         public void LoadContent(ContentManager content)
         {
-            
+
         }
     }
 }

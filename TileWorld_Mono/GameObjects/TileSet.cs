@@ -13,6 +13,8 @@ namespace TileWorld_Mono
         private Texture2D tileSetTexture;
         private int tileWidth;
         private int tileHeight;
+        private float layer = 1;
+        public float Layer { get { return layer; } set { layer = value; } }
         
 
         public TileSet(ContentManager content, int tileWidth, int tileHeight, string tileSetTextureName)
@@ -56,7 +58,7 @@ namespace TileWorld_Mono
 
         private  float CalculateDepth(Vector2 pos)
         {
-            return (pos.Y + pos.X / 1000) / 1000;
+            return (((pos.Y + pos.X) / 10000) + layer) / 1000;
         }
     }
     }
