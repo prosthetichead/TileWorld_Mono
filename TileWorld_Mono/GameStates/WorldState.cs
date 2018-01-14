@@ -14,11 +14,10 @@ namespace TileWorld_Mono
         World world;
         Player player;
         Character character;
-        public static Camera camera;
-
+        
         public WorldState(GraphicsDevice graphicsDevice) : base(graphicsDevice)
         {
-            camera = new Camera(graphicsDevice.Viewport);
+            
             world = new World("woopwoopwoopwoop");
             player = new Player();  //TODO: load char sheet 
             character = new Character(new Vector2(50,50));
@@ -27,7 +26,7 @@ namespace TileWorld_Mono
 
         public override void Initialize()
         {
-            camera.FollowGameObject(player.Character); //follow the player around
+            Game.camera.FollowGameObject(player.Character); //follow the player around
         }
 
         public override void LoadContent(ContentManager content)
@@ -49,7 +48,9 @@ namespace TileWorld_Mono
 
         public override void Update(GameTime gameTime)
         {
-            camera.Update(gameTime);
+            
+            world.Update(gameTime);
+
             character.ChangeState(Character.state.walk, Character.direction.left);
             character.Update(gameTime);
             player.Update(gameTime);
@@ -59,7 +60,7 @@ namespace TileWorld_Mono
         public override void Draw(SpriteBatch spriteBatch)
         {
 
-            spriteBatch.Begin(SpriteSortMode.FrontToBack, BlendState.AlphaBlend, SamplerState.PointWrap, null, null, null, camera.TransformMatrix);
+            spriteBatch.Begin(SpriteSortMode.FrontToBack, BlendState.AlphaBlend, SamplerState.PointWrap, null, null, null, Game.camera.TransformMatrix);
                 world.Draw(spriteBatch);
                 character.Draw(spriteBatch);
                 player.Draw(spriteBatch);

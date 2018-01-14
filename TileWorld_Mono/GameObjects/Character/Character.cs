@@ -81,12 +81,7 @@ namespace TileWorld_Mono
         private direction currentDirection = direction.up;
         private state currentState;
         
-
-        //public Character(CharacterSheet characterSheet) : base(position, width, height)
-        //{
-        //    cs = characterSheet;
-        //}
-        public Character(Vector2 position ) : base(position, 32, 32)
+        public Character(Vector2 position ) : base(position, 64, 64)
         {
             cs = new CharacterSheet();
         }
@@ -123,7 +118,7 @@ namespace TileWorld_Mono
                 case state.stop:
                     break;
                 case state.walk:
-                    position += directionVector2;
+                    position += directionVector2 * 2;
                     break;
                 default:
                     break;

@@ -12,8 +12,6 @@ namespace TileWorld_Mono
 {
     public class Sprite
     {
-
-
         private int spriteWidth;
         private int spriteHeight;
         private Vector2 position = new Vector2(100, 100);

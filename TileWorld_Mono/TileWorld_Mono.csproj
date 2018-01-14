@@ -105,6 +105,7 @@
     <Compile Include="FileSystem.cs" />
     <Compile Include="GameObjects\Character\Appearances.cs" />
     <Compile Include="GameObjects\Character\Character.cs" />
+    <Compile Include="GameObjects\Fonts.cs" />
     <Compile Include="GameObjects\GameObject.cs" />
     <Compile Include="GameObjects\Sprite.cs" />
     <Compile Include="GamePage.xaml.cs">

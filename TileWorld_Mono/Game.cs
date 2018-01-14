@@ -9,7 +9,7 @@ namespace TileWorld_Mono
     /// <summary>
     /// This is the main type for your game.
     /// </summary>
-    public class Game : Microsoft.Xna.Framework.Game
+     class Game : Microsoft.Xna.Framework.Game
     {
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
@@ -19,10 +19,11 @@ namespace TileWorld_Mono
         RenderTarget2D mainRenderTarget;
 
         //DEBUG MODE 
-        public static bool debugMode = false;
+        public static bool debugMode = true;
+
+        public static Camera camera;
 
         Framerate framerate;
-        SpriteFont fontTiny;
 
 
         public Game()
@@ -38,15 +39,14 @@ namespace TileWorld_Mono
             mainRenderTarget = new RenderTarget2D(GraphicsDevice, screenResWidth, screenResHeight);
 
             this.Window.ClientSizeChanged += new System.EventHandler<System.EventArgs>(Window_ClientSizeChanged);
-             
-            
+
+            camera = new Camera(GraphicsDevice.Viewport);
+
             IsFixedTimeStep = false;
         }
 
         private void Window_ClientSizeChanged(object sender, EventArgs e)
         {
-            Debug.WriteLine("resized");
-             
             //mainRenderTarget = new RenderTarget2D(GraphicsDevice, GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height);
         }
         
@@ -75,7 +75,7 @@ namespace TileWorld_Mono
         {
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
-            fontTiny = Content.Load<SpriteFont>(@"fonts\Font-PF Arma Five");
+            Fonts.LoadContent(Content);
             // TODO: use this.Content to load your game content here
 
         }
@@ -96,8 +96,11 @@ namespace TileWorld_Mono
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Update(GameTime gameTime)
         {
+            camera.Update(gameTime);
+
             //Update the input manager
             Inputs.Update(); 
+
             //Update the current state
             GameStateManager.Instance.Update(gameTime);
 
@@ -121,8 +124,8 @@ namespace TileWorld_Mono
             GraphicsDevice.SetRenderTarget(null);
             spriteBatch.Begin();
             spriteBatch.Draw(mainRenderTarget, new Rectangle(0, 0, GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height), Color.White);
-            spriteBatch.DrawString(fontTiny, "FPS: " + Math.Round(framerate.framerate, 2), new Vector2(10,10), Color.Tomato, 0f, Vector2.Zero, 3f, SpriteEffects.None, 1);
-            spriteBatch.DrawString(fontTiny, "FPS: " + Math.Round(framerate.framerate, 2), new Vector2(12, 12), Color.Black, 0f, Vector2.Zero, 3f, SpriteEffects.None, 1);
+            spriteBatch.DrawString(Fonts.ArmaFive, "FPS: " + Math.Round(framerate.framerate, 2), new Vector2(10,10), Color.Tomato, 0f, Vector2.Zero, 3f, SpriteEffects.None, 1);
+            spriteBatch.DrawString(Fonts.ArmaFive, "FPS: " + Math.Round(framerate.framerate, 2), new Vector2(12, 12), Color.Black, 0f, Vector2.Zero, 3f, SpriteEffects.None, 1);
 
             spriteBatch.End();
 

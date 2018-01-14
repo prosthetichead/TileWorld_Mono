@@ -6,6 +6,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using System.Security.Cryptography;
+using System.Threading.Tasks;
 
 namespace TileWorld_Mono
 {
@@ -17,17 +18,16 @@ namespace TileWorld_Mono
         public static readonly int tileHeight = 32;
         public static readonly int chunkWidth = 64;
         public static readonly int chunkHeight = 64;
-
+        
         private IDictionary<string, Chunk> chunkDictonary = new Dictionary<string, Chunk>();
 
-        private Vector2 playerPos;
-
+        
         private int currentChunkX;
         private int currentChunkY;
         
+        
         private TileSet GroundTiles;
-
-        private SpriteFont fontTiny;
+        
         //private ContentManager Content;
 
         public World( string worldName )
@@ -41,24 +41,19 @@ namespace TileWorld_Mono
 
             Noise2.SetSeed(seed);
 
-            AddNewChunks((int)playerPos.X, (int)playerPos.Y);
+            AddNewChunks(currentChunkX, currentChunkY);
+
+            // AddNewChunks((int)playerPos.X, (int)playerPos.Y);
         }
 
         public void LoadContent(ContentManager content)
         {
-                fontTiny = content.Load<SpriteFont>(@"fonts\Font-PF Arma Five");
-                GroundTiles = new TileSet(content, tileWidth, tileHeight, "tileSets/groundTiles");
-
-        }
-
-        public Vector2 getCenterOfTile(Vector2 position)
-        {
-            Vector2 returnVector2 = new Vector2((position.X / tileWidth), (position.Y/ tileHeight));
-            return returnVector2;
+            GroundTiles = new TileSet(content, tileWidth, tileHeight, "tileSets/groundTiles");
         }
 
 
-        public Chunk getChunk(int tileNumberX, int tileNumberY)
+
+        public Chunk GetChunk(int tileNumberX, int tileNumberY)
         {
             //chunks root position used for the chunk key
             int chunkX = getChunkX(tileNumberX);
@@ -89,10 +84,8 @@ namespace TileWorld_Mono
             CellArray[1] = GetCell(X - 1, Y);
             CellArray[2] = GetCell(X, Y + 1);
             CellArray[3] = GetCell(X, Y - 1);
-           
 
             return CellArray;
-
         }
 
 
@@ -126,7 +119,7 @@ namespace TileWorld_Mono
         }
 
 
-        private void AddNewChunks(int x, int y)
+        private async Task AddNewChunks(int x, int y)
         {
 
             int XStart = x - (chunkWidth * range);
@@ -138,36 +131,32 @@ namespace TileWorld_Mono
             int chunkX;
             int chunkY;
             string chunkKey;
-
-           for (int i = 0; i < chunkDictonary.Count; i++)
-           {
-            //chunkDictonary.ElementAt(i).Value.markedForDelete = true;
-           }
-
-           for (int X = XStart; X <= XEnd; X =X + chunkWidth)
-           {
-             for (int Y = YStart; Y <= YEnd; Y = Y + chunkHeight)
+            Task task = Task.Run(() =>
             {
-                    chunkX = getChunkX(X);
-                    chunkY = getChunkY(Y);
-                    chunkKey = chunkX + "," + chunkY;
+                for (int X = XStart; X <= XEnd; X = X + chunkWidth)
+                {
+                    for (int Y = YStart; Y <= YEnd; Y = Y + chunkHeight)
+                    {
+                        chunkX = getChunkX(X);
+                        chunkY = getChunkY(Y);
+                        chunkKey = chunkX + "," + chunkY;
 
+                        if (!chunkDictonary.ContainsKey(chunkKey))
+                        {
+                            //TODO: Look on the HDD for the chunk.
 
+                            //create the chunk add the chunk to the dictonary
+                            var chunk = new Chunk(chunkX, chunkY, worldName);
+                            var json = "";//Newtonsoft.Json.JsonConvert.SerializeObject(chunk);
+                            chunkDictonary.Add(chunkKey, chunk);
 
-                    if (!chunkDictonary.ContainsKey(chunkKey))
-                    { 
-                        //create the chunk add the chunk to the dictonary
-                        var chunk = new Chunk(chunkX, chunkY, worldName);
-                        var json = Newtonsoft.Json.JsonConvert.SerializeObject(chunk);
-                        chunkDictonary.Add(chunkKey, chunk); 
+                            Task taskIO = FileSystem.WriteTextLocalStorage(worldName + "\\" + chunkKey, json);
 
-                        //TODO: WRITE CHUCK TO HDD
-                        
-                        //chunkDictonary[chunkKey] = new Chunk(
+                        }
                     }
                 }
-            }   
-                       
+            });
+
         }
         private void CleanUpChunks()
         {
@@ -185,28 +174,21 @@ namespace TileWorld_Mono
             }
         }
         
-        public Boolean testIsNewChunk(int x, int y)
+        private Boolean IsNewChunk(Vector2 position)
         {
-            x = x / tileWidth;
-            y = y / tileHeight;
+            int x = (int)position.X / tileWidth;
+            int y = (int)position.Y / tileHeight;
 
             int chunkX = getChunkX(x);
             int chunkY = getChunkY(y);
             
             if ((currentChunkX == chunkX) & (currentChunkY == chunkY))
             {
-                //this is the same chunk still no need to update chunk dictonary!
+                //this is the same chunk no need to update chunk dictonary!
                 return false; 
             }
             else //we are in a new chunk
             {
-                //Thread addChunksThread = new Thread(() => AddNewChunks(x, y));
-                AddNewChunks(x, y);
-
-                CleanUpChunks();
-                //Thread thread = new Thread(CleanUpChunks);
-                //thread.Name = "Clean Up Chunks";
-                //thread.Start();
                 currentChunkX = chunkX; //update current chunk root pos
                 currentChunkY = chunkY;
                 return true; 
@@ -216,32 +198,25 @@ namespace TileWorld_Mono
 
         public void Update(GameTime gameTime)
         {
+            //check the position of the camera are we in looking at a new chunk?
+            Vector2 position = Game.camera.Position;
+            if (IsNewChunk(position))
+            {
+                var task = AddNewChunks((int)position.X, (int)position.Y);
+                task.ContinueWith(t => System.Diagnostics.Debug.WriteLine("Getting Chunks"));
+
+            }
 
         }
 
         public void Draw(SpriteBatch spriteBatch)
         {
-            Rectangle visArea = WorldState.camera.VisibleArea;
-            //Vector2 firstSquare = new Vector2(visArea.X / tileWidth, visArea.Y / tileHeight);
-            //Vector2 squareOffset = new Vector2(visArea.X % tileWidth, visArea.Y % tileHeight);
+            Rectangle visArea = Game.camera.VisibleArea;
+            Vector2 camPosition = Game.camera.Position;
             Vector2 origin = Vector2.Zero;
-            //int pixelPosX;
-            //int pixelPosY;
-            //int tilePosX;
-            //int tilePosY;
+            
             Cell cell;
-
-
-            //for (int y = -10; y < 100; y++)
-            //{
-            //    for (int x = -10; x < 100; x++)
-            //    {
-
-            // pixelPosX = (x * tileWidth) - (int)squareOffset.X;
-            // pixelPosY = (y * tileHeight) - (int)squareOffset.Y;
-            // tilePosX = x + (int)firstSquare.X;
-            // tilePosY = y + (int)firstSquare.Y;
-            // Color cellColor;
+            
             int tilesWide = visArea.Width / tileWidth;
             int tilesHigh = visArea.Height / tileHeight;
 
@@ -255,37 +230,23 @@ namespace TileWorld_Mono
                     cell = GetCellFromPixelPos(new Vector2(tileX, tileY));
 
                     Vector2 tileDrawPos = cell.PixelPosition; // new Vector2(cell.tilePosition.X * tileWidth, cell.tilePosition.Y * tileHeight);
-                    GroundTiles.Draw(spriteBatch, tileDrawPos, origin, cell.TileDrawID, Color.White, .000000001f);
+                    GroundTiles.Draw(spriteBatch, tileDrawPos, origin, cell.TileDrawID, Color.White);
 
                     if (Game.debugMode)
                     {
-                        spriteBatch.DrawString(fontTiny, cell.TilePosition.X + ", " + cell.TilePosition.Y, new Vector2(tileDrawPos.X + 2, tileDrawPos.Y + 2), Color.White, 0f, origin, 1f, SpriteEffects.None, 1);
-                        spriteBatch.DrawString(fontTiny, cell.TilePosition.X + ", " + cell.TilePosition.Y, new Vector2(tileDrawPos.X + 3, tileDrawPos.Y + 3), Color.Black, 0f, origin, 1f, SpriteEffects.None, .9f);
-
-                        
+                        if ( cell.PixelPosition.X <= camPosition.X + 200 && cell.PixelPosition.X >= camPosition.X - 200 && cell.PixelPosition.Y <= camPosition.Y + 200 && cell.PixelPosition.Y >= camPosition.Y - 200)
+                        {
+                            spriteBatch.DrawString(Fonts.ArmaFive, cell.TilePosition.X + "," + cell.TilePosition.Y, new Vector2(tileDrawPos.X , tileDrawPos.Y + 20), Color.White, 0f, origin, 1f, SpriteEffects.None, .0000000012f);
+                            spriteBatch.DrawString(Fonts.ArmaFive, cell.TilePosition.X + "," + cell.TilePosition.Y, new Vector2(tileDrawPos.X + 2, tileDrawPos.Y + 22), Color.Black, 0f, origin, 1f, SpriteEffects.None, .0000000011f);                           
+                        }
                     }
                 }
             }
-
-
-            //if (Game.debugMode)
-            //    cellColor = cell.debugColor;
-            //else
-            //    cellColor = cell.color;
-
-            //Draw Cell
-
-            
-        //    spriteBatch.DrawString(fontTiny, " " + Camara.calculateDepth(new Vector2(pixelPosX, pixelPosY)), new Vector2(pixelPosX + 2, pixelPosY + 20), Color.White, 0f, origin, 1f, SpriteEffects.None, 1);
         }
-
-        //    }// END X ForLoop
-        //} // END Y ForLoop
 
 
 
         #region Get ChunkPos
-        //finds the chuck pos using x y cords
         private int getChunkX(int x)
         {
             int test;
@@ -295,8 +256,6 @@ namespace TileWorld_Mono
                 chunkX = (x - chunkWidth) / chunkWidth;
             else
                 chunkX = x / chunkWidth;
-
-
             return chunkX;
         }
         private int getChunkY(int y)

@@ -19,6 +19,8 @@ namespace TileWorld_Mono
         protected Rectangle boundingBox;
 
         public Vector2 Position { get { return position; } set { position = value; } }
+        public int Width { get { return width; } }
+        public int Height { get { return height; } }
        
 
         public GameObject(Vector2 position, int width, int height)

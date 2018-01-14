@@ -15,7 +15,7 @@ namespace TileWorld_Mono
         private int tileHeight;
         private float layer = 1;
         public float Layer { get { return layer; } set { layer = value; } }
-        
+        public bool showDebugInfo = false;
 
         public TileSet(ContentManager content, int tileWidth, int tileHeight, string tileSetTextureName)
         {
@@ -46,6 +46,11 @@ namespace TileWorld_Mono
                     new Rectangle((int)position.X, (int)position.Y, tileWidth, tileHeight),
                     GetSourceRectangle(tileID),
                     color, 0f, origin, SpriteEffects.None, CalculateDepth(position));
+
+            if (Game.debugMode && showDebugInfo)
+            {
+                spriteBatch.DrawString(Fonts.ArmaFive, "DEPTH: " + CalculateDepth(position), new Vector2(position.X + tileWidth + 2, position.Y), Color.Black, 0f, origin, 1f, SpriteEffects.None, 1);
+            }
         }
 
         public void Draw(SpriteBatch spriteBatch, Vector2 position, Vector2 origin, int tileID, Color color, float Depth)
@@ -54,11 +59,15 @@ namespace TileWorld_Mono
             new Rectangle((int)position.X, (int)position.Y, tileWidth, tileHeight),
             GetSourceRectangle(tileID),
             color, 0f, origin, SpriteEffects.None, Depth);
+
+            
         }
 
         private  float CalculateDepth(Vector2 pos)
         {
-            return (((pos.Y + pos.X) / 10000) + layer) / 1000;
+            var screenPos = Game.camera.GetScreenPosition(pos);
+            
+            return (( Math.Abs(screenPos.Y + screenPos.X) / 10000) + layer) / 10000;
         }
     }
     }
