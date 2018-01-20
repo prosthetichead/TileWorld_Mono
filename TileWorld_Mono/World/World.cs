@@ -41,7 +41,7 @@ namespace TileWorld_Mono
 
             Noise2.SetSeed(seed);
 
-            AddNewChunks(currentChunkX, currentChunkY);
+            //AddNewChunks(currentChunkX, currentChunkY);
 
             // AddNewChunks((int)playerPos.X, (int)playerPos.Y);
         }
@@ -119,7 +119,7 @@ namespace TileWorld_Mono
         }
 
 
-        private async Task AddNewChunks(int x, int y)
+        private async Task UpdateChunks(int x, int y)
         {
 
             int XStart = x - (chunkWidth * range);
@@ -151,7 +151,7 @@ namespace TileWorld_Mono
                             chunkDictonary.Add(chunkKey, chunk);
 
                             Task taskIO = FileSystem.WriteTextLocalStorage(worldName + "\\" + chunkKey, json);
-
+                            
                         }
                     }
                 }
@@ -200,12 +200,11 @@ namespace TileWorld_Mono
         {
             //check the position of the camera are we in looking at a new chunk?
             Vector2 position = Game.camera.Position;
-            if (IsNewChunk(position))
-            {
-                var task = AddNewChunks((int)position.X, (int)position.Y);
-                task.ContinueWith(t => System.Diagnostics.Debug.WriteLine("Getting Chunks"));
 
-            }
+            //var task = AddNewChunks((int)position.X, (int)position.Y);
+            //task.ContinueWith(t => System.Diagnostics.Debug.WriteLine("Getting Chunks"));
+
+            
 
         }
 

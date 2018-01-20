@@ -22,8 +22,9 @@ namespace TileWorld_Mono
         public static bool debugMode = true;
 
         public static Camera camera;
+        
 
-        Framerate framerate;
+        DebugConsole debugConsole;
 
 
         public Game()
@@ -41,6 +42,8 @@ namespace TileWorld_Mono
             this.Window.ClientSizeChanged += new System.EventHandler<System.EventArgs>(Window_ClientSizeChanged);
 
             camera = new Camera(GraphicsDevice.Viewport);
+
+            debugConsole = new DebugConsole(GraphicsDevice, 400);
 
             IsFixedTimeStep = false;
         }
@@ -64,7 +67,6 @@ namespace TileWorld_Mono
             Inputs.Initialize();
             GameStateManager.Instance.SetContent(Content);
             GameStateManager.Instance.AddState("World", new WorldState(GraphicsDevice));
-            framerate = new Framerate(5);
         }
 
         /// <summary>
@@ -76,6 +78,7 @@ namespace TileWorld_Mono
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
             Fonts.LoadContent(Content);
+            debugConsole.LoadContent(Content);
             // TODO: use this.Content to load your game content here
 
         }
@@ -103,10 +106,11 @@ namespace TileWorld_Mono
 
             //Update the current state
             GameStateManager.Instance.Update(gameTime);
-
-            //update framrate counter
-            framerate.Update(gameTime.ElapsedGameTime.TotalSeconds);
             
+
+            //update debugConsole
+            debugConsole.Update(gameTime);
+
             base.Update(gameTime);
         }
 
@@ -123,10 +127,11 @@ namespace TileWorld_Mono
 
             GraphicsDevice.SetRenderTarget(null);
             spriteBatch.Begin();
-            spriteBatch.Draw(mainRenderTarget, new Rectangle(0, 0, GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height), Color.White);
-            spriteBatch.DrawString(Fonts.ArmaFive, "FPS: " + Math.Round(framerate.framerate, 2), new Vector2(10,10), Color.Tomato, 0f, Vector2.Zero, 3f, SpriteEffects.None, 1);
-            spriteBatch.DrawString(Fonts.ArmaFive, "FPS: " + Math.Round(framerate.framerate, 2), new Vector2(12, 12), Color.Black, 0f, Vector2.Zero, 3f, SpriteEffects.None, 1);
+                spriteBatch.Draw(mainRenderTarget, new Rectangle(0, 0+ (int)debugConsole.CurrentHeight, GraphicsDevice.Viewport.Width,  GraphicsDevice.Viewport.Height - (int)debugConsole.CurrentHeight), Color.White);
 
+                
+                debugConsole.Draw(spriteBatch);
+      
             spriteBatch.End();
 
         }

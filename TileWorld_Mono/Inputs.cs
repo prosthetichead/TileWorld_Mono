@@ -30,7 +30,7 @@ namespace TileWorld_Mono
         /// <summary>
         /// Actions
         /// </summary>
-        public enum Action { MoveUp, MoveDown, MoveLeft, MoveRight };
+        public enum Action { Console, MoveUp, MoveDown, MoveLeft, MoveRight };
         private static readonly string[] actionNames = { "Move Up", "Move Down", "Move Left", "Move Right" };
 
 
@@ -84,6 +84,12 @@ namespace TileWorld_Mono
         {
             int numberActions = Enum.GetNames(typeof(Action)).Length;
             actionMaps = new ActionMap[numberActions];
+
+            //display console
+            actionMaps[(int)Action.Console] = new ActionMap();
+            actionMaps[(int)Action.Console].keyboardKeys.Add(Keys.OemTilde);
+            //actionMapp
+
             //move up
             actionMaps[(int)Action.MoveUp] = new ActionMap();
             actionMaps[(int)Action.MoveUp].keyboardKeys.Add(Keys.W);
@@ -107,6 +113,8 @@ namespace TileWorld_Mono
             actionMaps[(int)Action.MoveRight].keyboardKeys.Add(Keys.D);
             actionMaps[(int)Action.MoveRight].keyboardKeys.Add(Keys.Right);
             actionMaps[(int)Action.MoveRight].gamePadButtons.Add(GamePadButtons.Right);
+
+           
 
         }
 
