@@ -19,7 +19,7 @@ namespace TileWorld_Mono
         {
             
             world = new World("woopwoopwoopwoop");
-            player = new Player();  //TODO: load char sheet 
+            player = new Player(world);  //TODO: load char sheet 
 
             //character = new Character(new Vector2(50,50));
             

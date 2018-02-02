@@ -13,8 +13,10 @@ namespace TileWorld_Mono
     {
         private Character character; //GameObject
         public Character Character { get { return character; } }
+        private World world;
+
         
-        public Player()
+        public Player(World world)
         {
             character = new Character( new Vector2() ); // Random Character TODO: Change this to load the players created/saved char
         }
