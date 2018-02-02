@@ -59,12 +59,19 @@ namespace TileWorld_Mono
               137,214,145, 93, 92,100,245,  0,216,186, 60, 83,105, 97,204, 52};
         #endregion
 
-        static public void SetSeed(int seed)
+        private static float _factor;
+
+        static public void SetSeed(int seed, float factor)
         {
             _random = new Random(seed);
+            _factor = factor;
             InitGradients();
         }
-        
+
+        public static float GetWorldNoise(int x, int y, int z)
+        {
+            return (float)Noise(2 * x * _factor, 2 * y * _factor, z * _factor) + (float)Noise(4 * x * _factor, 4 * y * _factor, z * _factor) + (float)Noise(8 * x * _factor, 8 * y * _factor, z * _factor);
+        }
 
         static public double Noise(double x, double y, double z)
         {

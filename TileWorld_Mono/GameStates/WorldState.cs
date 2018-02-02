@@ -19,8 +19,9 @@ namespace TileWorld_Mono
         {
             
             world = new World("woopwoopwoopwoop");
-            player = new Player();  //TODO: load char sheet 
-            character = new Character(new Vector2(50,50));
+            player = new Player(world);  //TODO: load char sheet 
+
+            //character = new Character(new Vector2(50,50));
             
         }
 
@@ -37,7 +38,6 @@ namespace TileWorld_Mono
            
             world.LoadContent(content);
             player.LoadContent(content);
-            character.LoadContent(content);
             
         }
 
@@ -51,8 +51,9 @@ namespace TileWorld_Mono
             
             world.Update(gameTime);
 
-            character.ChangeState(Character.state.walk, Character.direction.left);
-            character.Update(gameTime);
+            //character.ChangeState(Character.state.walk, Character.direction.left);
+            //character.Update(gameTime);
+
             player.Update(gameTime);
             
         }
@@ -62,7 +63,6 @@ namespace TileWorld_Mono
 
             spriteBatch.Begin(SpriteSortMode.FrontToBack, BlendState.AlphaBlend, SamplerState.PointWrap, null, null, null, Game.camera.TransformMatrix);
                 world.Draw(spriteBatch);
-                character.Draw(spriteBatch);
                 player.Draw(spriteBatch);
             spriteBatch.End();
         }

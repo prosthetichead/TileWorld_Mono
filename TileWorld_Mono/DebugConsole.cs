@@ -63,7 +63,7 @@ namespace TileWorld_Mono
         {
             //setup console background
             consoleBackground = new Texture2D(graphicsDevice, 1, 1);
-            consoleBackground.SetData(new[] { Color.Black });
+            consoleBackground.SetData(new[] { new Color(0,0,0,.6f) });
         }
 
         [Conditional("DEBUG")]
@@ -77,7 +77,7 @@ namespace TileWorld_Mono
         [Conditional("DEBUG")]
         public void Update(GameTime gameTime)
         {
-            if (Inputs.IsActionTriggered(Inputs.Action.Console))
+            if (Inputs.IsKeyTriggered(Microsoft.Xna.Framework.Input.Keys.OemTilde) )
             {
                 visible = !visible;
             }

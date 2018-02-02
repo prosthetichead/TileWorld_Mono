@@ -10,93 +10,46 @@ using Microsoft.Xna.Framework;
 
 namespace TileWorld_Mono
 {
-    public class AppearanceKey
+    
+    public class AppearanceTexture
     {
-        public int sex;
-        public int slot;
-        public string key;
 
-        public AppearanceKey(Character.sex sex, Appearances.slot slot, string key)
-        {
-            this.sex = (int)sex;
-            this.slot = (int)slot;
-            this.key = key;
-        }
-        public AppearanceKey(int sex, int slot, string key)
-        {
-            this.sex = sex;
-            this.slot = slot;
-            this.key = key;
-        }
     }
 
-    public class Appearance
+    public class CharacterAppearance
     {
-        private bool hasTexture = true;
-        private Texture2D texture;
-        private string texturePath;
-        private string name;
-        private int width;
-        private int height;
+        private  Dictionary<string, Texture2D>[,] appearances;
+        private  int numberSexes;
+        private  int numberSlots;
 
-        public Texture2D Texture => texture;
-        public string Name => name;
-        public int Width => width;
-        public int Height => height;
-        public bool HasTexture => hasTexture;
-
-        public Appearance(string name, int width = 64, int height = 64)
+        public CharacterAppearance()
         {
-            this.name = name;
-            this.width = width;
-            this.height = height;
-            this.texturePath = "";
-            hasTexture = false;
-        }
-
-        public Appearance(string texturePath, string name, int width = 64, int height = 64)
-        {
-            this.texturePath = texturePath;
-            this.name = name;
-            this.width = width;
-            this.height = height;
-        }
-        public void LoadContent(ContentManager content)
-        {
-            if(hasTexture = true && !String.IsNullOrWhiteSpace(texturePath))
-                texture = content.Load<Texture2D>(texturePath);
-            else
-                texture = null;
-        }
-    }
-
-    public static class Appearances
-    {
-        public enum slot { body, hair, facial };
-
-        private static Dictionary<String, Appearance>[,] appearances;
-        private static int numberSexes;
-        private static int numberSlots;
-        
-        static Appearances()
-        {
-            numberSlots = Enum.GetNames(typeof(slot)).Length;
+            numberSlots = Enum.GetNames(typeof(Character.slot)).Length;
             numberSexes = Enum.GetNames(typeof(Character.sex)).Length;
 
-            appearances = new Dictionary<string, Appearance>[numberSexes, numberSlots];
+            appearances = new Dictionary<string, Texture2D>[numberSexes, numberSlots];
             for (int h = 0; h < numberSexes; h++)
             {
                 for (int i = 0; i < numberSlots; i++)
                 {
-                    appearances[h, i] = new Dictionary<string, Appearance>();
+                    appearances[h, i] = new Dictionary<string, Texture2D>();
                 }
             }
+        }
+
+        public void LoadContent(ContentManager content)
+        {
             int male = (int)Character.sex.male;
             int female = (int)Character.sex.female;
             int skeleton = (int)Character.sex.skeleton;
-            
-            // skeleton BODIES
-            appearances[skeleton, (int)slot.body].Add("skeleton", new Appearance("characters/body/male/skeleton", "Undead"));
+            int body = (int)Character.slot.body;
+            appearances[skeleton, body].Add("White Skeleton", content.Load<Texture2D>("characters/body/male/skeleton"));
+
+        }
+
+
+        // skeleton BODIES
+        appearances[skeleton, (int)slot.body].Add("skeleton", new Appearance("characters/body/male/skeleton", "Undead"));
 
             // MALE BODIES
             //appearances[male, (int)slot.body].Add("no facial", new Appearance("No Facial Hair"));
@@ -248,6 +201,10 @@ namespace TileWorld_Mono
             Appearance appearance;
             appearances[(int)key.sex, (int)key.slot].TryGetValue(key.key, out appearance);
             return appearance;
+        }
+        public static Sprite GetAppearaceSprite(AppearanceKey key)
+        {
+
         }
 
     }

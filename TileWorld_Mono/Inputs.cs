@@ -15,6 +15,24 @@ namespace TileWorld_Mono
     {
         public List<Inputs.GamePadButtons> gamePadButtons = new List<Inputs.GamePadButtons>();
         public List<Keys> keyboardKeys = new List<Keys>();
+
+        
+        /// <summary>
+        /// Add a map of any combo of gamepad buttons
+        /// if more then 1 button provided then all buttons must be pressed for the action
+        /// </summary>
+        /// <param name="gamePadButtonMap"></param>
+        public void AddGamePadMap(Inputs.GamePadButtons gamePadButtonMap)
+        {
+            gamePadButtons.Add(gamePadButtonMap);
+        }
+
+        public void AddKeyboardKeyMap(Keys keyboardKeyMap)
+        {
+            keyboardKeys.Add(keyboardKeyMap);
+        }
+
+        //TODO: add methods to replace maps
     }
 
     public static class Inputs
@@ -26,11 +44,10 @@ namespace TileWorld_Mono
         private static ActionMap[] actionMaps;
         /// The value of an analog control that reads as a "pressed button"
         const float analogLimit = 0.5f;
-
         /// <summary>
         /// Actions
         /// </summary>
-        public enum Action { Console, MoveUp, MoveDown, MoveLeft, MoveRight };
+        public enum Action { MoveUp, MoveDown, MoveLeft, MoveRight };
         private static readonly string[] actionNames = { "Move Up", "Move Down", "Move Left", "Move Right" };
 
 
@@ -73,10 +90,6 @@ namespace TileWorld_Mono
             RightStickRight
         }
 
-
-        //ACTION REGION
-        #region Action Region
-
         /// <summary>
         /// Reset the action mapping to the defualts
         /// </summary>
@@ -85,34 +98,30 @@ namespace TileWorld_Mono
             int numberActions = Enum.GetNames(typeof(Action)).Length;
             actionMaps = new ActionMap[numberActions];
 
-            //display console
-            actionMaps[(int)Action.Console] = new ActionMap();
-            actionMaps[(int)Action.Console].keyboardKeys.Add(Keys.OemTilde);
-            //actionMapp
-
+            //actionMap
             //move up
             actionMaps[(int)Action.MoveUp] = new ActionMap();
-            actionMaps[(int)Action.MoveUp].keyboardKeys.Add(Keys.W);
-            actionMaps[(int)Action.MoveUp].keyboardKeys.Add(Keys.Up);
-            actionMaps[(int)Action.MoveUp].gamePadButtons.Add(GamePadButtons.Up);
+            actionMaps[(int)Action.MoveUp].AddKeyboardKeyMap(Keys.W);
+            actionMaps[(int)Action.MoveUp].AddKeyboardKeyMap(Keys.Up);
+            actionMaps[(int)Action.MoveUp].AddGamePadMap(GamePadButtons.Up);
 
             //move down
             actionMaps[(int)Action.MoveDown] = new ActionMap();
-            actionMaps[(int)Action.MoveDown].keyboardKeys.Add(Keys.S);
-            actionMaps[(int)Action.MoveDown].keyboardKeys.Add(Keys.Down);
-            actionMaps[(int)Action.MoveDown].gamePadButtons.Add(GamePadButtons.Down);
+            actionMaps[(int)Action.MoveDown].AddKeyboardKeyMap(Keys.S);
+            actionMaps[(int)Action.MoveDown].AddKeyboardKeyMap(Keys.Down);
+            actionMaps[(int)Action.MoveDown].AddGamePadMap(GamePadButtons.Down);
 
             //move Left
             actionMaps[(int)Action.MoveLeft] = new ActionMap();
-            actionMaps[(int)Action.MoveLeft].keyboardKeys.Add(Keys.A);
-            actionMaps[(int)Action.MoveLeft].keyboardKeys.Add(Keys.Left);
-            actionMaps[(int)Action.MoveLeft].gamePadButtons.Add(GamePadButtons.Left);
+            actionMaps[(int)Action.MoveLeft].AddKeyboardKeyMap(Keys.A);
+            actionMaps[(int)Action.MoveLeft].AddKeyboardKeyMap(Keys.Left);
+            actionMaps[(int)Action.MoveLeft].AddGamePadMap(GamePadButtons.Left);
 
             //move right
             actionMaps[(int)Action.MoveRight] = new ActionMap();
-            actionMaps[(int)Action.MoveRight].keyboardKeys.Add(Keys.D);
-            actionMaps[(int)Action.MoveRight].keyboardKeys.Add(Keys.Right);
-            actionMaps[(int)Action.MoveRight].gamePadButtons.Add(GamePadButtons.Right);
+            actionMaps[(int)Action.MoveRight].AddKeyboardKeyMap(Keys.D);
+            actionMaps[(int)Action.MoveRight].AddKeyboardKeyMap(Keys.Right);
+            actionMaps[(int)Action.MoveRight].AddGamePadMap(GamePadButtons.Right);
 
            
 
@@ -139,6 +148,7 @@ namespace TileWorld_Mono
                 if (IsKeyPressed(actionMap.keyboardKeys[i]))
                     return true;
             }
+
             //Is a Gamepad pugged in?
             if (currentGamePadState.IsConnected) {
                 for (int i = 0; i < actionMap.gamePadButtons.Count; i++) {
@@ -178,60 +188,87 @@ namespace TileWorld_Mono
             }
             return false;
         }
-
-#endregion
-
-        //KEYBOARD REGION
-        #region Keyboard Region
+        
 
         /// <summary>
         /// Check if a key was just pressed in the most recent update.
         /// </summary>
         public static bool IsKeyTriggered(Keys key)
         {
-            return (currentKeyboardState.IsKeyDown(key)) &&
-                (!previousKeyboardState.IsKeyDown(key));
+            if ((currentKeyboardState.IsKeyDown(key)) && (!previousKeyboardState.IsKeyDown(key)))
+                return true;
+            else
+                return false;
         }
+
         /// <summary>
-        /// Check if a key is pressed.
+        /// Check if a keys are pressed.
         /// </summary>
         public static bool IsKeyPressed(Keys key)
         {
-            return currentKeyboardState.IsKeyDown(key);
+            if (currentKeyboardState.IsKeyDown(key))
+                return true;
+            else
+                return false;
+
         }
 
-        #endregion
 
         //GAMEPAD REGION
         #region GamePad Region
-            
-        private static bool IsGamePadButtonPressed(GamePadButtons gamePadKey)
+
+        public static bool IsGamePadButtonPressed(GamePadButtons gamePadKey)
         {
             switch (gamePadKey)
             {
                 case GamePadButtons.Up:
-                    return (currentGamePadState.DPad.Up == ButtonState.Pressed);
+                    if ((currentGamePadState.DPad.Up == ButtonState.Pressed))
+                        return true;
+                    else
+                        return false;
                 case GamePadButtons.Down:
-                    return (currentGamePadState.DPad.Down == ButtonState.Pressed);
+                    if ((currentGamePadState.DPad.Down == ButtonState.Pressed))
+                        return true;
+                    else
+                        return false;
                 case GamePadButtons.Left:
-                    return (currentGamePadState.DPad.Left == ButtonState.Pressed);
+                    if ((currentGamePadState.DPad.Left == ButtonState.Pressed))
+                        return true;
+                    else
+                        return false;
                 case GamePadButtons.Right:
-                    return (currentGamePadState.DPad.Right == ButtonState.Pressed);
+                    if ((currentGamePadState.DPad.Right == ButtonState.Pressed))
+                        return true;
+                    else
+                        return false;
             }
             return false;
         }
-        private static bool IsGamePadButtonTriggered(GamePadButtons gamePadKey)
+        public static bool IsGamePadButtonTriggered(GamePadButtons gamePadKey)
         {
             switch (gamePadKey)
             {
                 case GamePadButtons.Up:
-                    return ((currentGamePadState.DPad.Up == ButtonState.Pressed) && (previousGamePadState.DPad.Up == ButtonState.Released));
+                    if ((currentGamePadState.DPad.Up == ButtonState.Pressed) && (previousGamePadState.DPad.Up == ButtonState.Released))
+                        return true;
+                    else
+                        return false;
                 case GamePadButtons.Down:
-                    return ((currentGamePadState.DPad.Down == ButtonState.Pressed) && (previousGamePadState.DPad.Down == ButtonState.Released));
+                    if ((currentGamePadState.DPad.Down == ButtonState.Pressed) && (previousGamePadState.DPad.Down == ButtonState.Released))
+                        return true;
+                    else
+                        return false;
                 case GamePadButtons.Left:
-                    return ((currentGamePadState.DPad.Left == ButtonState.Pressed) && (previousGamePadState.DPad.Left == ButtonState.Released));
+                    if ((currentGamePadState.DPad.Left == ButtonState.Pressed) && (previousGamePadState.DPad.Left == ButtonState.Released))
+                        return true;
+                    else
+                        return false;
                 case GamePadButtons.Right:
-                    return ((currentGamePadState.DPad.Right == ButtonState.Pressed) && (previousGamePadState.DPad.Right == ButtonState.Released));
+                    if ((currentGamePadState.DPad.Right == ButtonState.Pressed) && (previousGamePadState.DPad.Right == ButtonState.Released))
+                        return true;
+                    else
+                        return false;
+
             }
             return false;
         }
@@ -247,14 +284,15 @@ namespace TileWorld_Mono
         ///<summary>
         ///Updates the keyboard and gamepad control states.
         ///</summary>
-        public static void Update()
+        public static void Update(GameTime gameTime)
         {
-            //update the keyboard state
-            previousKeyboardState = currentKeyboardState;
-            currentKeyboardState = Keyboard.GetState();
 
-            //update the gamepad state
+            previousKeyboardState = currentKeyboardState;
             previousGamePadState = currentGamePadState;
+            
+            //update the keyboard state
+            currentKeyboardState = Keyboard.GetState();
+            //update the gamepad state
             currentGamePadState = GamePad.GetState(PlayerIndex.One);
         }
 

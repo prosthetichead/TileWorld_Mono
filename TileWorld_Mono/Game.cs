@@ -18,13 +18,12 @@ namespace TileWorld_Mono
         int screenResHeight = 720; //2160; //1080; //720
         RenderTarget2D mainRenderTarget;
 
+        public static Camera camera;
+
+
         //DEBUG MODE 
         public static bool debugMode = true;
-
-        public static Camera camera;
-        
-
-        DebugConsole debugConsole;
+        public static DebugConsole debugConsole;
 
 
         public Game()
@@ -102,7 +101,7 @@ namespace TileWorld_Mono
             camera.Update(gameTime);
 
             //Update the input manager
-            Inputs.Update(); 
+            Inputs.Update(gameTime); 
 
             //Update the current state
             GameStateManager.Instance.Update(gameTime);
@@ -127,7 +126,7 @@ namespace TileWorld_Mono
 
             GraphicsDevice.SetRenderTarget(null);
             spriteBatch.Begin();
-                spriteBatch.Draw(mainRenderTarget, new Rectangle(0, 0+ (int)debugConsole.CurrentHeight, GraphicsDevice.Viewport.Width,  GraphicsDevice.Viewport.Height - (int)debugConsole.CurrentHeight), Color.White);
+                spriteBatch.Draw(mainRenderTarget, new Rectangle(0, 0, GraphicsDevice.Viewport.Width,  GraphicsDevice.Viewport.Height), Color.White);
 
                 
                 debugConsole.Draw(spriteBatch);

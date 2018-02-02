@@ -13,23 +13,21 @@ namespace TileWorld_Mono
     class World
     {
         private string worldName;
-        private int range = 3;
+        private int range = 2;
         public static readonly int tileWidth = 32;
         public static readonly int tileHeight = 32;
         public static readonly int chunkWidth = 64;
         public static readonly int chunkHeight = 64;
         
         private IDictionary<string, Chunk> chunkDictonary = new Dictionary<string, Chunk>();
-
         
+
         private int currentChunkX;
         private int currentChunkY;
-        
-        
-        private TileSet GroundTiles;
-        
-        //private ContentManager Content;
 
+        private TileSet GroundTiles;
+
+        
         public World( string worldName )
         {
             this.worldName = worldName;
@@ -39,20 +37,15 @@ namespace TileWorld_Mono
             var hashed = md5Hasher.ComputeHash(Encoding.UTF8.GetBytes(worldName));
             var seed = BitConverter.ToInt32(hashed, 0);
 
-            Noise2.SetSeed(seed);
-
-            //AddNewChunks(currentChunkX, currentChunkY);
-
-            // AddNewChunks((int)playerPos.X, (int)playerPos.Y);
+            Noise2.SetSeed(seed, .006f);
+            
         }
 
         public void LoadContent(ContentManager content)
         {
             GroundTiles = new TileSet(content, tileWidth, tileHeight, "tileSets/groundTiles");
         }
-
-
-
+        
         public Chunk GetChunk(int tileNumberX, int tileNumberY)
         {
             //chunks root position used for the chunk key
@@ -60,8 +53,7 @@ namespace TileWorld_Mono
             int chunkY = getChunkY(tileNumberY);
             //chunk key used as dictonary Key
             string chunkKey = chunkX + "," + chunkY;
-
-
+            
             //is chunk in dictonary?
             if (chunkDictonary.ContainsKey(chunkKey)) //yes, get chunk
             {
@@ -119,45 +111,39 @@ namespace TileWorld_Mono
         }
 
 
-        private async Task UpdateChunks(int x, int y)
+        private void UpdateChunks()
         {
-
-            int XStart = x - (chunkWidth * range);
-            int XEnd = x + (chunkWidth * range);
-            int YStart = y - (chunkHeight * range);
-            int YEnd = y + (chunkHeight * range);
-
-
-            int chunkX;
-            int chunkY;
-            string chunkKey;
-            Task task = Task.Run(() =>
+            int XStart = currentChunkX - range;
+            int XEnd = currentChunkX + range;
+            int YStart = currentChunkY - range;
+            int YEnd = currentChunkY + range;
+            
+            for (int X = XStart; X <= XEnd; X++)
             {
-                for (int X = XStart; X <= XEnd; X = X + chunkWidth)
+                for (int Y = YStart; Y <= YEnd; Y++)
                 {
-                    for (int Y = YStart; Y <= YEnd; Y = Y + chunkHeight)
+                    //int chunkX = getChunkX(X);
+                    //int chunkY = getChunkY(Y);
+                    string chunkKey = X + "," + Y;
+
+                    
+                    if (!chunkDictonary.ContainsKey(chunkKey))
                     {
-                        chunkX = getChunkX(X);
-                        chunkY = getChunkY(Y);
-                        chunkKey = chunkX + "," + chunkY;
+                        //TODO: Look on the HDD for the chunk.
 
-                        if (!chunkDictonary.ContainsKey(chunkKey))
-                        {
-                            //TODO: Look on the HDD for the chunk.
-
-                            //create the chunk add the chunk to the dictonary
-                            var chunk = new Chunk(chunkX, chunkY, worldName);
-                            var json = "";//Newtonsoft.Json.JsonConvert.SerializeObject(chunk);
-                            chunkDictonary.Add(chunkKey, chunk);
-
-                            Task taskIO = FileSystem.WriteTextLocalStorage(worldName + "\\" + chunkKey, json);
-                            
-                        }
+                        
+                        //create the chunk add the chunk to the dictonary
+                        var chunk = new Chunk(X, Y, worldName);
+                        var json = Newtonsoft.Json.JsonConvert.SerializeObject(chunk);
+                        chunkDictonary.Add(chunkKey, chunk);
+                        //Task taskIO = FileSystem.WriteTextLocalStorage(worldName + "\\" + chunkKey, json);
                     }
                 }
-            });
-
+            }
         }
+
+
+
         private void CleanUpChunks()
         {
             
@@ -189,6 +175,7 @@ namespace TileWorld_Mono
             }
             else //we are in a new chunk
             {
+                Game.debugConsole.WriteLine("Changed Chunks " + chunkX + "," + chunkY);
                 currentChunkX = chunkX; //update current chunk root pos
                 currentChunkY = chunkY;
                 return true; 
@@ -201,10 +188,8 @@ namespace TileWorld_Mono
             //check the position of the camera are we in looking at a new chunk?
             Vector2 position = Game.camera.Position;
 
-            //var task = AddNewChunks((int)position.X, (int)position.Y);
-            //task.ContinueWith(t => System.Diagnostics.Debug.WriteLine("Getting Chunks"));
-
-            
+            IsNewChunk(position);
+            UpdateChunks();
 
         }
 

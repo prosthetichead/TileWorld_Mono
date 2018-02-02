@@ -1,15 +1,11 @@
 ﻿using System;
 using Microsoft.Xna.Framework;
 using Newtonsoft.Json;
+using System.Collections.Generic;
+
 
 namespace TileWorld_Mono
 {
-
-    public struct ChunkData
-    {
-        
-    }
-
     [JsonObject(MemberSerialization.Fields)]
     class Chunk
     {
@@ -20,7 +16,10 @@ namespace TileWorld_Mono
         private int chunkRootPosX;
         private int chunkRootPosY;
         private Cell[,] cells;
-        
+        private IDictionary<string, Character> characters; //The sheets of all the characters currently in this chunk, key is the unique CharID
+
+
+
         public Chunk(int chunkRootPosX, int chunkRootPosY, string worldName)
         {
             this.worldName = worldName;
@@ -39,11 +38,7 @@ namespace TileWorld_Mono
             CreateChunk();
         }
         
-        private float getNoise(float factor, int x, int y, int z)
-        {
-            return (float)Noise2.Noise(2 * x * factor, 2 * y * factor, z * factor) + (float)Noise2.Noise(4 * x * factor, 4 * y * factor, z * factor) + (float)Noise2.Noise(8 * x * factor, 8 * y * factor, z * factor);
-                       
-        }
+   
 
         /// <summary>
         /// Reads in chunk file from text file or if file dosnt exists creates a new chunk
@@ -52,13 +47,13 @@ namespace TileWorld_Mono
         /// <returns></returns>
         private void CreateChunk()
         {
-            string chunkFileName = worldName + "\\" + chunkRootPosX + "," + chunkRootPosY + ".chunk";
+            Game.debugConsole.WriteLine("Adding new Chunk (" + chunkRootPosX + "," + chunkRootPosY + ")");
             
             float sand = .1f;
             float water = 0f;
             float grass = 2; //it shouldnt EVER return more then 1, but it does..
 
-            float factor =.001f;
+            //float factor =.006f;
             
             int cX = 0;
             int cY = 0;
@@ -66,7 +61,7 @@ namespace TileWorld_Mono
             {
                 for (int X = World.chunkWidth * chunkRootPosX; X < ((World.chunkWidth * chunkRootPosX) + World.chunkWidth); X++)
                 {
-                    float noise = getNoise(factor, X, Y, 100);
+                    float noise = Noise2.GetWorldNoise(X, Y, 100);
 
                     //create the cell
                     if (noise <= water)//Water Cell
@@ -98,7 +93,11 @@ namespace TileWorld_Mono
             cells[x, y] = newCell;
         }
 
-
+        public void Update(GameTime gametime)
+        {
+           
+        }
+        
 
 
         //private void readChunkFromHDD() {
