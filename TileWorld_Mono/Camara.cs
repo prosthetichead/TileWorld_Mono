@@ -12,9 +12,11 @@ namespace TileWorld_Mono
         private float zoom = 1f;
         private Vector2 position;
         private float rotationZ = 0;
-        private Viewport view;
+        //private Viewport view;
         private Rectangle bounds;
         private GameObject follow;
+
+        public Vector2 Position { get { return position; } }
 
         public Matrix TransformMatrix
         {
@@ -24,9 +26,12 @@ namespace TileWorld_Mono
                     Matrix.CreateTranslation(new Vector3(-position.X, -position.Y, 0)) *
                     Matrix.CreateRotationZ(rotationZ) *
                     Matrix.CreateScale(zoom) *
-                    Matrix.CreateTranslation(new Vector3(view.Bounds.Width * 0.5f, view.Bounds.Height * 0.5f, 0));
+                    Matrix.CreateTranslation(new Vector3(bounds.Width * 0.5f, bounds.Height * 0.5f, 0));
             }
         }
+
+        public Rectangle Bounds { get { return bounds; } }
+
         public Rectangle VisibleArea
         {
             get
@@ -34,9 +39,9 @@ namespace TileWorld_Mono
                 var inverseViewMatrix = Matrix.Invert(TransformMatrix);
 
                 var tl = Vector2.Transform(Vector2.Zero, inverseViewMatrix);
-                var tr = Vector2.Transform(new Vector2(view.Bounds.X, 0), inverseViewMatrix);
-                var bl = Vector2.Transform(new Vector2(0, view.Bounds.Y), inverseViewMatrix);
-                var br = Vector2.Transform(new Vector2(view.Bounds.Width, view.Bounds.Height), inverseViewMatrix);
+                var tr = Vector2.Transform(new Vector2(bounds.X, 0), inverseViewMatrix);
+                var bl = Vector2.Transform(new Vector2(0, bounds.Y), inverseViewMatrix);
+                var br = Vector2.Transform(new Vector2(bounds.Width, bounds.Height), inverseViewMatrix);
 
                 var min = new Vector2(
                     MathHelper.Min(tl.X, MathHelper.Min(tr.X, MathHelper.Min(bl.X, br.X))),
@@ -51,7 +56,7 @@ namespace TileWorld_Mono
 
         public Camera(Viewport viewport)
         {
-            view = viewport;
+
             bounds = viewport.Bounds;
         }
 
@@ -60,12 +65,19 @@ namespace TileWorld_Mono
             this.follow = follow;
         }
         
+        public Vector2 GetScreenPosition( Vector2 worldPosition)
+        {
+            var screenPos = Vector2.Transform(worldPosition, TransformMatrix);
+
+            return screenPos;
+        }
 
         public void Update(GameTime gameTime)
         {
             if (follow != null) //Do we have something to follow?
             {
-                position = follow.Position;
+                position = new Vector2(follow.Position.X + (follow.Width / 2), follow.Position.Y + (follow.Height / 2));
+                
             }
         }
 
