@@ -33,7 +33,7 @@ namespace TileWorld_Mono
         public override void LoadContent(ContentManager content)
         {
             //load all appearance textures
-            Appearances.LoadContent(content);
+            CharacterAppearance.LoadContent(content);
 
            
             world.LoadContent(content);

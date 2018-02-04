@@ -52,23 +52,28 @@ namespace TileWorld_Mono
 
     public class Character : GameObject
     {
-        
-
-        public enum state { stop, walk }
-        public enum sex { female, male, skeleton }
+        public enum state { stop, walk, thrust, cast }
         public enum direction { up, down, left, right }
+        public enum sex { female, male, skeleton }
         public enum slot { body, hair, facial }
 
-        private List<Sprite> appearanceSprites;
-        private Vector2 directionVector2;
-        private direction currentDirection = direction.up;
-        private state currentState;
-        
-        public Character(Vector2 position ) : base(position, 64, 64)
-        {
-            //cs = new CharacterSheet();
+        private String[] apperanceKeys; //key for each slot if null then slot has no aperance.
+        private Sprite[] appearanceSprites;
 
-            RefreshApperance();
+        private sex characterSex;
+        private Vector4 facialHairColour;
+        private Vector4 hairColour;
+
+        private Vector2 directionVector2;
+        private direction currentDirection;
+        private state currentState;
+
+        
+        public Character(Vector2 position) : base(position, 64, 64)
+        {
+            apperanceKeys = new String[Enum.GetValues(typeof(slot)).Length];
+            appearanceSprites = new Sprite[apperanceKeys.Length];
+            ChangeState(state.stop, direction.down);
         }
 
         public override void Initialize()
@@ -80,55 +85,58 @@ namespace TileWorld_Mono
         /// </summary>
         public void RefreshApperance()
         {
-            appearanceSprites = new List<Sprite>();
-            foreach (var appearanceKey in cs.appearanceKeys)
-            {
-                appearanceSprites.Add(new Sprite( CharacterAppearances.GetAppearance(appearanceKey) );
+            appearanceSprites = new Sprite[apperanceKeys.Length]; //clear the whole sprite list.
+            for (int i = 0; i < apperanceKeys.Length; i++) {
+                appearanceSprites[i] = new Sprite();
+
+                //appearanceSprites.Add(  );
             }
 
             //set hair colour
-            foreach (var appearanceSprite in appearanceSprites.Where(i => i.appearanceKey.slot == (int)Appearances.slot.hair && i.sprite != null))
-                appearanceSprite.sprite.Colour = cs.hairColour;
+            //foreach (var appearanceSprite in appearanceSprites.Where(i => i.appearanceKey.slot == (int)Appearances.slot.hair && i.sprite != null))
+              //  appearanceSprite.sprite.Colour = cs.hairColour;
             // //set facial colour
-            foreach (var appearanceSprite in appearanceSprites.Where(i => i.appearanceKey.slot == (int)Appearances.slot.facial && i.sprite != null))
-                appearanceSprite.sprite.Colour = cs.facialColour;
+            //foreach (var appearanceSprite in appearanceSprites.Where(i => i.appearanceKey.slot == (int)Appearances.slot.facial && i.sprite != null))
+              //  appearanceSprite.sprite.Colour = cs.facialColour;
         }
 
         public override void LoadContent(ContentManager content)
         {
             //We dont need to load anything its already loaded by the static Appearances Class
             //we just need to refresh the apperance sprites using the keys
-            RefreshApperance();
+            
         }
 
         public override void Update(GameTime gameTime)
         {
-            foreach (var appearanceSprite in appearanceSprites.Where(i=>i.sprite != null))
+            foreach (var sprite in appearanceSprites)
             {
-                appearanceSprite.sprite.SetAnimation(currentState + "" + currentDirection); //se animation 
-                appearanceSprite.sprite.Update(gameTime, position);
+                if (sprite != null)
+                {
+                    sprite.SetAnimation(currentState + "" + currentDirection); //set animation to the animation name
+                    sprite.Update(gameTime, position); // update the sprite
+                }
             }
-            switch (currentState)
+            switch (currentState) // state machine
             {
                 case state.stop:
                     break;
                 case state.walk:
-                    position += directionVector2 * 2;
+                    position += directionVector2 * 2; 
                     break;
                 default:
                     break;
             }
         }
-
-        public void ChangeState(state state)
+        
+        public void ChangeState(state? newState, direction? newDirection)
         {
-            ChangeState(state, currentDirection);
-        }
+            if(newState != null)
+                currentState = (state)newState;
+            if(newDirection != null)
+                currentDirection = (direction)newDirection;
 
-        public void ChangeState(state state, direction direction)
-        {
-            currentState = state;
-            currentDirection = direction;
+            //set the direction vector.
             switch (currentDirection)
             {
                 case direction.up:
@@ -150,9 +158,12 @@ namespace TileWorld_Mono
 
         public override void Draw(SpriteBatch spriteBatch)
         {
-            foreach(var appearanceSprite in appearanceSprites.Where(i => i.sprite != null))
+            foreach(var appearanceSprite in appearanceSprites)
             {
-                appearanceSprite.sprite.Draw(spriteBatch);
+                if (appearanceSprite != null)
+                {
+                    appearanceSprite.Draw(spriteBatch);
+                }
             }
         }
 

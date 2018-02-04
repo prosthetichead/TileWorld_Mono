@@ -103,7 +103,7 @@
     <Compile Include="Framerate.cs" />
     <Compile Include="DebugConsole.cs" />
     <Compile Include="FileSystem.cs" />
-    <Compile Include="GameObjects\Character\Appearances.cs" />
+    <Compile Include="GameObjects\Character\CharacterAppearance.cs" />
     <Compile Include="GameObjects\Character\Character.cs" />
     <Compile Include="GameObjects\Character\CharacterAI.cs" />
     <Compile Include="GameObjects\Fonts.cs" />

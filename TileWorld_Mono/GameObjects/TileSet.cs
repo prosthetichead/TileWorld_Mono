@@ -8,12 +8,15 @@ using Microsoft.Xna.Framework.Content;
 
 namespace TileWorld_Mono
 {
-    class TileSet
+    public class TileSet
     {
         private Texture2D tileSetTexture;
         private int tileWidth;
         private int tileHeight;
         private float layer = 1;
+        public int TileWidth { get { return tileWidth; } }
+        public int TileHeight { get { return tileHeight; } }
+
         public float Layer { get { return layer; } set { layer = value; } }
         public bool showDebugInfo = false;
 
@@ -59,8 +62,6 @@ namespace TileWorld_Mono
             new Rectangle((int)position.X, (int)position.Y, tileWidth, tileHeight),
             GetSourceRectangle(tileID),
             color, 0f, origin, SpriteEffects.None, Depth);
-
-            
         }
 
         private  float CalculateDepth(Vector2 pos)

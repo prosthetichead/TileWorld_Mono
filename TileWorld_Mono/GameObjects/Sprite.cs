@@ -30,15 +30,16 @@ namespace TileWorld_Mono
         private float timePerFrame = 100;
 
         private string currentAnimationName = "default";
-        private List<int> currentAnimationFrames;
-        private Dictionary<string, List<int>> animations;
+        private int[] currentAnimationFrames;
+        private Dictionary<string, int[]> animations;
         private int currentAnimationFramesIndex = 0;
 
 
         /// <summary>
         /// Change a colour using a vector4 R G B A
+        /// 0 white - 1 black
         /// </summary>
-        public Vector4 Colour { get => colour.ToVector4(); set { colour =  new Color(value); } }
+        public Vector4 Colour { get => colour.ToVector4(); set { colour = new Color(value); } }
 
         /// <summary>
         /// Default constructor
@@ -47,10 +48,10 @@ namespace TileWorld_Mono
         /// <param name="spriteHeight">the height of the sprite on the sprite sheet</param>
         public Sprite(int spriteWidth = 64, int spriteHeight = 64)
         {
-            
+
             //setup the default animation 
-            animations = new Dictionary<string, List<int>>();
-            animations.Add("default", new List<int> { 1 });
+            animations = new Dictionary<string, int[]>();
+            animations.Add("default", new int[] { 1 });
             animations.TryGetValue("default", out currentAnimationFrames);
 
             this.spriteWidth = spriteWidth;
@@ -76,7 +77,7 @@ namespace TileWorld_Mono
             this.spriteWidth = spriteWidth;
             this.spriteHeight = spriteHeight;
         }
-        
+
         public void SetLayer(float layer)
         {
             tileSet.Layer = layer;
@@ -92,30 +93,19 @@ namespace TileWorld_Mono
             tileSet = new TileSet(texture, spriteWidth, spriteHeight);
             tileSet.Layer = 2;
         }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        public void SetToCharacterAnimation()
+        public void LoadContent(TileSet tileSet)
         {
+            this.tileSet = tileSet;
+            spriteWidth = tileSet.TileWidth;
+            spriteHeight = tileSet.TileHeight;
+            tileSet.Layer = 2;
+        }
 
-            animations.Add("cast_up",      new List<int> { 0, 1, 2, 3, 4, 5, 6 });
-            animations.Add("cast_left",    new List<int> { 13, 14, 15, 16, 17, 18, 19 });
-            animations.Add("cast_down",    new List<int> { 26, 27, 28, 29, 30, 31, 32 });
-            animations.Add("cast_right",   new List<int> { 39, 40, 41, 42, 43, 44, 45 });
-            animations.Add("thrust_up",    new List<int> { 52, 53, 54, 55, 56, 57, 58, 59 });
-            animations.Add("thrust_left",  new List<int> { 65, 66, 67, 68, 69, 70, 71, 72 });
-            animations.Add("thrust_down",  new List<int> { 78, 79, 80, 81, 82, 83, 84, 85 });
-            animations.Add("thrust_right", new List<int> { 91, 92, 93, 94, 95, 96, 97, 98 });
-            animations.Add(Character.state.walk + "" + Character.direction.up, new List<int> { 105, 106, 107, 108, 109, 110, 111, 112 }); 
-            animations.Add(Character.state.stop + "" + Character.direction.up, new List<int> { 104 });
-            animations.Add(Character.state.walk + "" + Character.direction.left, new List<int> { 118, 119, 120, 121, 122, 123, 124, 125 }); 
-            animations.Add(Character.state.stop + "" + Character.direction.left, new List<int> { 117 });
-            animations.Add(Character.state.walk + "" + Character.direction.down, new List<int> { 131, 132, 133, 134, 135, 136, 137, 138 }); 
-            animations.Add(Character.state.stop + "" + Character.direction.down, new List<int> { 130 });
-            animations.Add(Character.state.walk + "" + Character.direction.right, new List<int> { 144, 145, 146, 147, 148, 149, 150, 151 });
-            animations.Add(Character.state.stop + "" + Character.direction.right, new List<int> { 143 });
 
+
+        public void AddAnimation(string Key, int[] frames)
+        {
+            animations.Add("cast_up", frames);
         }
 
         public void SetAnimation(string actionName)

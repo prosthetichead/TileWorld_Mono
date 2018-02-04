@@ -46,7 +46,7 @@ namespace TileWorld_Mono
             }
             else //No action pressed
             {
-                character.ChangeState(Character.state.stop);
+                character.ChangeState(Character.state.stop, null);
             }
 
             character.Update(gameTime);
