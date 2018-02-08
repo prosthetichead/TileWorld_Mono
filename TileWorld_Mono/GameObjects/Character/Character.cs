@@ -76,8 +76,22 @@ namespace TileWorld_Mono
             ChangeState(state.stop, direction.down);
         }
 
+        /// <summary>
+        /// Randomize just the Body, Hair, and Facial Slots
+        /// </summary>
+        public void RandomApperance()
+        {
+            apperanceKeys[(int)slot.body] = CharacterAppearance.RandomApperanceSlotKey(characterSex, slot.body);
+            apperanceKeys[(int)slot.facial] = CharacterAppearance.RandomApperanceSlotKey(characterSex, slot.facial);
+            apperanceKeys[(int)slot.hair] = CharacterAppearance.RandomApperanceSlotKey(characterSex, slot.hair);
+
+            RefreshApperance();
+        }
+
+
         public override void Initialize()
         {
+
         }
 
         /// <summary>
@@ -87,9 +101,7 @@ namespace TileWorld_Mono
         {
             appearanceSprites = new Sprite[apperanceKeys.Length]; //clear the whole sprite list.
             for (int i = 0; i < apperanceKeys.Length; i++) {
-                appearanceSprites[i] = new Sprite();
-
-                //appearanceSprites.Add(  );
+                appearanceSprites[i] = CharacterAppearance.GetSprite(characterSex, (slot)i, apperanceKeys[i]);
             }
 
             //set hair colour
@@ -104,7 +116,7 @@ namespace TileWorld_Mono
         {
             //We dont need to load anything its already loaded by the static Appearances Class
             //we just need to refresh the apperance sprites using the keys
-            
+            RandomApperance();
         }
 
         public override void Update(GameTime gameTime)

@@ -103,9 +103,9 @@ namespace TileWorld_Mono
 
 
 
-        public void AddAnimation(string Key, int[] frames)
+        public void AddAnimation(string key, int[] frames)
         {
-            animations.Add("cast_up", frames);
+            animations.Add(key, frames);
         }
 
         public void SetAnimation(string actionName)

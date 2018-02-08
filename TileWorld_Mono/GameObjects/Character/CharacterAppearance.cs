@@ -63,6 +63,18 @@ namespace TileWorld_Mono
             SetAnimation(sprite);
             return sprite;
         }
+        
+        public static string[] GetKeys(Character.sex charSex, Character.slot charSlot)
+        {
+            return appearances[(int)charSex, (int)charSlot].Keys.ToArray();
+        }
+
+        public static string RandomApperanceSlotKey(Character.sex charSex, Character.slot charSlot)
+        {
+            var keys = GetKeys(charSex, charSlot);
+            Random random = new Random();
+            return keys[random.Next(0, keys.Length-1)]; 
+        }
 
         private static void SetAnimation(Sprite sprite)
         {
