@@ -98,7 +98,7 @@ namespace TileWorld_Mono
             this.tileSet = tileSet;
             spriteWidth = tileSet.TileWidth;
             spriteHeight = tileSet.TileHeight;
-            tileSet.Layer = 2;
+            //tileSet.Layer = 2;
         }
 
 

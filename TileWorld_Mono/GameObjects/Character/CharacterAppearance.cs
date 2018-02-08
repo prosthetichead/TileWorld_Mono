@@ -39,21 +39,25 @@ namespace TileWorld_Mono
             int body = (int)Character.slot.body;
             int facial = (int)Character.slot.facial;
             int hair = (int)Character.slot.hair;
+            float bodyLayer = 2.1f;
+            float facialLayer = 2.2f;
+            float hairLayer = 2.3f;
+
 
             //Bodys
-            appearances[skeleton, body].Add("White Skeleton", new TileSet(content, 64, 64, "characters/body/male/skeleton"));
-            appearances[male, body].Add("Human 1", new TileSet(content, 64, 64, "characters/body/male/light"));
-            appearances[female, body].Add("Human 1", new TileSet(content, 64, 64, "characters/body/female/light"));
+            appearances[skeleton, body].Add("White Skeleton", new TileSet(content, 64, 64, bodyLayer, "characters/body/male/skeleton"));
+            appearances[male, body].Add("Human 1", new TileSet(content, 64, 64, bodyLayer, "characters/body/male/light"));
+            appearances[female, body].Add("Human 1", new TileSet(content, 64, 64, bodyLayer, "characters/body/female/light"));
 
             //Facial Hair
-            appearances[skeleton, facial].Add("Beard 1", new TileSet(content, 64, 64, "characters/facial/male/beard"));
-            appearances[male, facial].Add("Beard 1", new TileSet(content, 64, 64, "characters/facial/male/beard"));
-            appearances[female, facial].Add("Beard 1", new TileSet(content, 64, 64, "characters/facial/male/beard"));
+            appearances[skeleton, facial].Add("Beard 1", new TileSet(content, 64, 64, facialLayer, "characters/facial/male/beard"));
+            appearances[male, facial].Add("Beard 1", new TileSet(content, 64, 64, facialLayer, "characters/facial/male/beard"));
+            appearances[female, facial].Add("Beard 1", new TileSet(content, 64, 64, facialLayer, "characters/facial/male/beard"));
             
             //Hair
-            appearances[skeleton, hair].Add("Messy 1", new TileSet(content, 64, 64, "characters/hair/male/messy1"));
-            appearances[male, hair].Add("Messy 1", new TileSet(content, 64, 64, "characters/hair/male/messy1"));
-            appearances[female, hair].Add("Messy 1", new TileSet(content, 64, 64, "characters/hair/female/messy1"));
+            appearances[skeleton, hair].Add("Messy 1", new TileSet(content, 64, 64, hairLayer,"characters/hair/male/messy1"));
+            appearances[male, hair].Add("Messy 1", new TileSet(content, 64, 64, hairLayer, "characters/hair/male/messy1"));
+            appearances[female, hair].Add("Messy 1", new TileSet(content, 64, 64, hairLayer, "characters/hair/female/messy1"));
         }
 
         public static Sprite GetSprite(Character.sex charSex, Character.slot charSlot, string key)

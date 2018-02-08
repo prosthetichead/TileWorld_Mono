@@ -26,6 +26,14 @@ namespace TileWorld_Mono
             this.tileHeight = tileHeight;
             this.tileSetTexture = content.Load<Texture2D>(tileSetTextureName);
         }
+        public TileSet(ContentManager content, int tileWidth, int tileHeight, float layer, string tileSetTextureName)
+        {
+            this.tileWidth = tileWidth;
+            this.tileHeight = tileHeight;
+            this.tileSetTexture = content.Load<Texture2D>(tileSetTextureName);
+            this.layer = layer;
+        }
+
 
         public TileSet(Texture2D tileSetTexture, int tileWidth, int tileHeight)
         {
@@ -59,9 +67,9 @@ namespace TileWorld_Mono
         public void Draw(SpriteBatch spriteBatch, Vector2 position, Vector2 origin, int tileID, Color color, float Depth)
         {
             spriteBatch.Draw(tileSetTexture,
-            new Rectangle((int)position.X, (int)position.Y, tileWidth, tileHeight),
-            GetSourceRectangle(tileID),
-            color, 0f, origin, SpriteEffects.None, Depth);
+                    new Rectangle((int)position.X, (int)position.Y, tileWidth, tileHeight),
+                    GetSourceRectangle(tileID),
+                    color, 0f, origin, SpriteEffects.None, Depth);
         }
 
         private  float CalculateDepth(Vector2 pos)
