@@ -122,15 +122,19 @@ namespace TileWorld_Mono
             base.Draw(gameTime);
             GraphicsDevice.SetRenderTarget(mainRenderTarget);
             GraphicsDevice.Clear(Color.Aqua);
-            GameStateManager.Instance.Draw(spriteBatch); //draw current state
+            
+                GameStateManager.Instance.Draw(spriteBatch); //draw current state
+            spriteBatch.Begin();
+                debugConsole.Draw(spriteBatch);
+            spriteBatch.End();
 
             GraphicsDevice.SetRenderTarget(null);
             spriteBatch.Begin();
-                spriteBatch.Draw(mainRenderTarget, new Rectangle(0, 0, GraphicsDevice.Viewport.Width,  GraphicsDevice.Viewport.Height), Color.White);
-
+                var ratio = Math.Min((float)GraphicsDevice.Viewport.Width / screenResWidth, (float)GraphicsDevice.Viewport.Height / screenResHeight);
+          
                 
-                debugConsole.Draw(spriteBatch);
-      
+                //float height = (screenResHeight / (float)screenResWidth) * GraphicsDevice.Viewport.Width;   
+                spriteBatch.Draw(mainRenderTarget, new Rectangle(0, 0, (int)(screenResWidth *ratio), (int)(screenResHeight*ratio)), Color.White);      
             spriteBatch.End();
 
         }
