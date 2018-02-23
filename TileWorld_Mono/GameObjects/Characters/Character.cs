@@ -74,6 +74,9 @@ namespace TileWorld_Mono
             apperanceKeys = new String[Enum.GetValues(typeof(slot)).Length];
             appearanceSprites = new Sprite[apperanceKeys.Length];
             ChangeState(state.stop, direction.down);
+
+            characterSex = sex.skeleton;
+
         }
 
         /// <summary>

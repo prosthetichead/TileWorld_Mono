@@ -103,9 +103,9 @@
     <Compile Include="Framerate.cs" />
     <Compile Include="DebugConsole.cs" />
     <Compile Include="FileSystem.cs" />
-    <Compile Include="GameObjects\Character\CharacterAppearance.cs" />
-    <Compile Include="GameObjects\Character\Character.cs" />
-    <Compile Include="GameObjects\Character\CharacterAI.cs" />
+    <Compile Include="GameObjects\Characters\CharacterAppearance.cs" />
+    <Compile Include="GameObjects\Characters\Character.cs" />
+    <Compile Include="GameObjects\Characters\CharacterAI.cs" />
     <Compile Include="GameObjects\Fonts.cs" />
     <Compile Include="GameObjects\GameObject.cs" />
     <Compile Include="GameObjects\Sprite.cs" />
@@ -117,7 +117,7 @@
     <Compile Include="GameStates\GameStateManager.cs" />
     <Compile Include="GameStates\WorldState.cs" />
     <Compile Include="Inputs.cs" />
-    <Compile Include="GameObjects\Character\Player.cs" />
+    <Compile Include="GameObjects\Characters\Player.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="GameObjects\TileSet.cs" />
     <Compile Include="Camara.cs" />
@@ -427,6 +427,7 @@
   <ItemGroup>
     <Folder Include="Content\characters\torso\female\" />
     <Folder Include="Content\characters\torso\male\" />
+    <Folder Include="GameObjects\Trees\" />
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>

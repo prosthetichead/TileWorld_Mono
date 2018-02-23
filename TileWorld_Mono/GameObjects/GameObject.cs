@@ -13,7 +13,7 @@ namespace TileWorld_Mono
 {
     public abstract class GameObject
     {
-        protected Vector2 position = new Vector2(0,0);
+        protected Vector2 position = new Vector2(0, 0);
         protected int height;
         protected int width;
         protected Rectangle boundingBox;
@@ -21,7 +21,7 @@ namespace TileWorld_Mono
         public Vector2 Position { get { return position; } set { position = value; } }
         public int Width { get { return width; } }
         public int Height { get { return height; } }
-       
+
 
         public GameObject(Vector2 position, int width, int height)
         {
@@ -29,6 +29,11 @@ namespace TileWorld_Mono
             this.width = width;
             this.height = height;
 
+        }
+        public Rectangle Collision(Rectangle collidingBounds)
+        {
+            Rectangle intersects = Rectangle.Intersect(boundingBox, collidingBounds);
+            return intersects;
         }
         public abstract void Initialize();
         public abstract void LoadContent(ContentManager content);
