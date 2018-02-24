@@ -131,10 +131,14 @@ namespace TileWorld_Mono
             GraphicsDevice.SetRenderTarget(null);
             spriteBatch.Begin();
                 var ratio = Math.Min((float)GraphicsDevice.Viewport.Width / screenResWidth, (float)GraphicsDevice.Viewport.Height / screenResHeight);
-          
-                
-                //float height = (screenResHeight / (float)screenResWidth) * GraphicsDevice.Viewport.Width;   
-                spriteBatch.Draw(mainRenderTarget, new Rectangle(0, 0, (int)(screenResWidth *ratio), (int)(screenResHeight*ratio)), Color.White);      
+
+
+            //float height = (screenResHeight / (float)screenResWidth) * GraphicsDevice.Viewport.Width;   
+            int renderTargetWidth = (int)(screenResWidth * ratio);
+            int renderTargetHeight = (int)(screenResHeight * ratio);
+            int renderTargetPosX = (GraphicsDevice.Viewport.Width-renderTargetWidth) /2;
+            int renderTargetPosY = (GraphicsDevice.Viewport.Height-renderTargetHeight) /2;
+            spriteBatch.Draw(mainRenderTarget, new Rectangle(renderTargetPosX, renderTargetPosY, renderTargetWidth, renderTargetHeight), Color.White);      
             spriteBatch.End();
 
         }
