@@ -42,7 +42,7 @@ namespace TileWorld_Mono
 
             camera = new Camera(GraphicsDevice.Viewport);
 
-            debugConsole = new DebugConsole(GraphicsDevice, 400);
+            debugConsole = new DebugConsole(GraphicsDevice, 200);
 
             IsFixedTimeStep = false;
         }

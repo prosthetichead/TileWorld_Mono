@@ -9,47 +9,6 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace TileWorld_Mono
 {
-    //public class CharacterSheet
-    //{
-    //    public string name;
-    //    public int maxMana;
-    //    public int maxHitPoints;
-    //    public int mana;
-    //    public int hitPoints;
-    //    public int level;
-    //    public int xp;
-
-    //    public int strength;
-    //    public int dexterity;
-    //    public int constitution;
-    //    public int intelligence;
-    //    public int wisdom;
-    //    public int charisma;
-
-    //    public Character.sex gender;
-
-    //    public List<AppearanceKey> appearanceKeys;
-    //    public Vector4 hairColour;
-    //    public Vector4 facialColour;
-
-    //    public CharacterSheet()
-    //    {
-    //        //New Empty Char
-    //        Random random = new Random();
-    //        //random gender
-    //        gender = (Character.sex)random.Next(0, Enum.GetNames(typeof(Character.sex)).Length);
-    //        //random apperance
-    //        if (appearanceKeys == null)
-    //            appearanceKeys = Appearances.RandomApperance(gender);
-    //        //random hair colour
-    //        if (hairColour == Vector4.Zero)
-    //            hairColour = new Vector4((float)random.NextDouble(), (float)random.NextDouble(), (float)random.NextDouble(), 1);
-    //        //random facial Colour
-    //        if (facialColour == Vector4.Zero)
-    //            facialColour = new Vector4((float)random.NextDouble(), (float)random.NextDouble(), (float)random.NextDouble(), 1);
-    //    }
-    //}
-
     public class Character : GameObject
     {
         public enum state { stop, walk, thrust, cast }
@@ -75,8 +34,7 @@ namespace TileWorld_Mono
             appearanceSprites = new Sprite[apperanceKeys.Length];
             ChangeState(state.stop, direction.down);
 
-            characterSex = sex.skeleton;
-
+            characterSex = sex.male;
         }
 
         /// <summary>
@@ -88,13 +46,14 @@ namespace TileWorld_Mono
             apperanceKeys[(int)slot.facial] = CharacterAppearance.RandomApperanceSlotKey(characterSex, slot.facial);
             apperanceKeys[(int)slot.hair] = CharacterAppearance.RandomApperanceSlotKey(characterSex, slot.hair);
 
-            RefreshApperance();
+            //RefreshApperance();
         }
 
 
         public override void Initialize()
         {
-
+            
+            RefreshApperance();
         }
 
         /// <summary>
@@ -106,20 +65,15 @@ namespace TileWorld_Mono
             for (int i = 0; i < apperanceKeys.Length; i++) {
                 appearanceSprites[i] = CharacterAppearance.GetSprite(characterSex, (slot)i, apperanceKeys[i]);
             }
-
-            //set hair colour
-            //foreach (var appearanceSprite in appearanceSprites.Where(i => i.appearanceKey.slot == (int)Appearances.slot.hair && i.sprite != null))
-              //  appearanceSprite.sprite.Colour = cs.hairColour;
-            // //set facial colour
-            //foreach (var appearanceSprite in appearanceSprites.Where(i => i.appearanceKey.slot == (int)Appearances.slot.facial && i.sprite != null))
-              //  appearanceSprite.sprite.Colour = cs.facialColour;
         }
 
         public override void LoadContent(ContentManager content)
         {
             //We dont need to load anything its already loaded by the static Appearances Class
             //we just need to refresh the apperance sprites using the keys
+            //RandomApperance();
             RandomApperance();
+            RefreshApperance();
         }
 
         public override void Update(GameTime gameTime)

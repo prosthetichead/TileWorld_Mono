@@ -146,7 +146,7 @@ namespace TileWorld_Mono
         /// <param name="spriteBatch">The sprite batch</param>
         public void Draw(SpriteBatch spriteBatch)
         {
-            if (visible)
+            if (visible && tileSet != null)
             {
                 tileSet.Draw(spriteBatch, position, origin, currentAnimationFrames[currentAnimationFramesIndex], colour);
                 //spriteBatch.Draw(texture, position, rectangle, colour, rotation, origin, scale, spriteEffects, depth);

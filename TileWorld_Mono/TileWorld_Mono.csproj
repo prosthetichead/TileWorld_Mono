@@ -105,10 +105,10 @@
     <Compile Include="Game\FileSystem.cs" />
     <Compile Include="Game\GameObjects\Characters\CharacterAppearance.cs" />
     <Compile Include="Game\GameObjects\Characters\Character.cs" />
-    <Compile Include="Game\GameObjects\Characters\CharacterAI.cs" />
-    <Compile Include="Game\GameObjects\Fonts.cs" />
+    <Compile Include="Game\Fonts.cs" />
     <Compile Include="Game\GameObjects\GameObject.cs" />
-    <Compile Include="Game\GameObjects\Sprite.cs" />
+    <Compile Include="Game\GameObjects\GameObjectManager.cs" />
+    <Compile Include="Game\Sprite.cs" />
     <Compile Include="GamePage.xaml.cs">
       <DependentUpon>GamePage.xaml</DependentUpon>
     </Compile>
@@ -119,7 +119,7 @@
     <Compile Include="Game\Inputs.cs" />
     <Compile Include="Game\GameObjects\Characters\Player.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Game\GameObjects\TileSet.cs" />
+    <Compile Include="Game\TileSet.cs" />
     <Compile Include="Game\Camara.cs" />
     <Compile Include="Game\World\Cell.cs" />
     <Compile Include="Game\World\Chunk.cs" />

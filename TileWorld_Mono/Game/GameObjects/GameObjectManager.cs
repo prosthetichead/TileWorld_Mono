@@ -4,11 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace TileWorld_Mono.GameObjects.Character
+namespace TileWorld_Mono
 {
-    class CharacterAI
+    class GameObjectManager
     {
-
 
     }
 }

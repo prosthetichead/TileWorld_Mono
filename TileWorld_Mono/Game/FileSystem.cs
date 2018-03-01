@@ -10,33 +10,40 @@ namespace TileWorld_Mono
 {
     public  static class FileSystem
     {
-        public static async Task ReadJSONContent(string filePath)
-        {
-            try
-            {
+    //    public static async Task ReadFile(string filePath)
+    //    {
+    //        try
+    //        {
+    //            StorageFolder InstallationFolder = Windows.Storage.
                 
-                string fname = @"Content\" + filePath + ".json";
-                StorageFolder InstallationFolder = Windows.ApplicationModel.Package.Current.InstalledLocation;
-                
-                StorageFile file = await InstallationFolder.GetFileAsync(fname);
-                var a = file.DisplayName;
-                //string text = FileIO.ReadTextAsync(file).GetResults();
+    //            StorageFile file = await InstallationFolder.GetFileAsync(fname);
+    //            var a = file.DisplayName;
+    //        }
+    //        catch (Exception)
+    //        {
 
-                //return InstallationFolder.DisplayName;
-            }
-            catch (Exception)
-            {
-
-                throw;
-            }
+    //            throw;
+    //        }
  
-        }
+    //    }
 
         public static async Task WriteTextLocalStorage(string filePath, string text)
         {
             StorageFolder storageFolder = ApplicationData.Current.LocalFolder;
             StorageFile File = await storageFolder.CreateFileAsync(filePath, CreationCollisionOption.ReplaceExisting);
+            Game.debugConsole.WriteLine("Disc IO Started for file " + filePath);
             await Windows.Storage.FileIO.WriteTextAsync(File, text);
+            Game.debugConsole.WriteLine("Disc IO Complete for file " + filePath);
+
+        }
+
+        public static async Task<String> ReadTextLocalStorage(string filePath)
+        {
+            StorageFolder storageFolder = ApplicationData.Current.LocalFolder;
+            StorageFile File = await storageFolder.CreateFileAsync(filePath, CreationCollisionOption.ReplaceExisting);
+            string text = await Windows.Storage.FileIO.ReadTextAsync(File);
+
+            return text;
         }
     }
 }

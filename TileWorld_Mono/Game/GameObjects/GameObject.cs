@@ -16,11 +16,11 @@ namespace TileWorld_Mono
         protected Vector2 position = new Vector2(0, 0);
         protected int height;
         protected int width;
-        protected Rectangle boundingBox;
 
         public Vector2 Position { get { return position; } set { position = value; } }
         public int Width { get { return width; } }
         public int Height { get { return height; } }
+        public Rectangle BoundingBox { get { return new Rectangle((int)position.X, (int)position.Y, width, height); } }
 
 
         public GameObject(Vector2 position, int width, int height)
@@ -30,11 +30,13 @@ namespace TileWorld_Mono
             this.height = height;
 
         }
-        public Rectangle Collision(Rectangle collidingBounds)
+
+        public Rectangle CollisionWith(GameObject gameObject)
         {
-            Rectangle intersects = Rectangle.Intersect(boundingBox, collidingBounds);
+            Rectangle intersects = Rectangle.Intersect(BoundingBox, gameObject.BoundingBox);
             return intersects;
         }
+
         public abstract void Initialize();
         public abstract void LoadContent(ContentManager content);
         public abstract void UnloadContent();

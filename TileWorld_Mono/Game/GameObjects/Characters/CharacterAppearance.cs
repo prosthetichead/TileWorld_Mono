@@ -63,8 +63,11 @@ namespace TileWorld_Mono
         public static Sprite GetSprite(Character.sex charSex, Character.slot charSlot, string key)
         {
             Sprite sprite = new Sprite();
-            sprite.LoadContent(appearances[(int)charSex, (int)charSlot][key]);
-            SetAnimation(sprite);
+            if (key != null)
+            {
+                sprite.LoadContent(appearances[(int)charSex, (int)charSlot][key]);
+                SetAnimation(sprite);
+            }
             return sprite;
         }
         

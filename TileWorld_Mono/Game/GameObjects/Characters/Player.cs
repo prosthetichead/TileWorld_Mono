@@ -13,13 +13,23 @@ namespace TileWorld_Mono
     {
         private Character character; //GameObject
         public Character Character { get { return character; } }
-        private World world;
-
         
-        public Player(World world)
+        public Player()
         {
-            character = new Character( new Vector2() ); // Random Character TODO: Change this to load the players created/saved char
+            //Look for a saved character
+            //
+            
+            //or create a new one
+
+            character = new Character( new Vector2() );
         }
+
+        public void Initilize()
+        {
+            string t = FileSystem.ReadTextLocalStorage("player.json").Result;
+        }
+
+
         public void LoadContent(ContentManager content)
         {
             character.LoadContent(content);

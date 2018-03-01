@@ -136,7 +136,10 @@ namespace TileWorld_Mono
                         var chunk = new Chunk(X, Y, worldName);
                         var json = Newtonsoft.Json.JsonConvert.SerializeObject(chunk);
                         chunkDictonary.Add(chunkKey, chunk);
-                        //Task taskIO = FileSystem.WriteTextLocalStorage(worldName + "\\" + chunkKey, json);
+
+                       // FileSystem.WriteTextLocalStorage(worldName + "\\" + chunkKey)
+                        FileSystem.WriteTextLocalStorage(worldName + "\\" + chunkKey, json);
+
                     }
                 }
             }

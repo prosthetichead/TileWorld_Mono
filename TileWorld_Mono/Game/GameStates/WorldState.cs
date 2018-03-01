@@ -13,20 +13,19 @@ namespace TileWorld_Mono
     {
         World world;
         Player player;
-        Character character;
+        GameObjectManager gameObjectManager;
         
         public WorldState(GraphicsDevice graphicsDevice) : base(graphicsDevice)
         {
             
             world = new World("woopwoopwoopwoop2");
-            player = new Player(world);  //TODO: load char sheet 
-            character = new Character(new Vector2(0,0) );
-            //character = new Character(new Vector2(50,50));
+            player = new Player();  
 
         }
 
         public override void Initialize()
         {
+            player.Initilize();
             Game.camera.FollowGameObject(player.Character); //follow the player around
         }
 
@@ -35,10 +34,10 @@ namespace TileWorld_Mono
             //load all appearance textures
             CharacterAppearance.LoadContent(content);
 
-           
+
+            
             world.LoadContent(content);
             player.LoadContent(content);
-            character.LoadContent(content);
             
         }
 
@@ -56,7 +55,6 @@ namespace TileWorld_Mono
             //character.Update(gameTime);
 
             player.Update(gameTime);
-            character.Update(gameTime);
             
         }
 
@@ -66,7 +64,6 @@ namespace TileWorld_Mono
             spriteBatch.Begin(SpriteSortMode.FrontToBack, BlendState.AlphaBlend, SamplerState.PointWrap, null, null, null, Game.camera.TransformMatrix);
                 world.Draw(spriteBatch);
                 player.Draw(spriteBatch);
-            character.Draw(spriteBatch);
             spriteBatch.End();
         }
     }
