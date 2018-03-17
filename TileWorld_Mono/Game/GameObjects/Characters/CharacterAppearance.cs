@@ -30,7 +30,7 @@ namespace TileWorld_Mono
                 }
             }
         }
-
+        
         public static void LoadContent(ContentManager content)
         {
             int male = (int)Character.sex.male;

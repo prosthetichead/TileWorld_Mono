@@ -38,7 +38,7 @@ namespace TileWorld_Mono
         }
 
         public abstract void Initialize();
-        public abstract void LoadContent(ContentManager content);
+        public abstract void LoadContent();
         public abstract void UnloadContent();
         public abstract void Update(GameTime gameTime);
         public abstract void Draw(SpriteBatch spriteBatch);

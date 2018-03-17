@@ -52,8 +52,7 @@ namespace TileWorld_Mono
 
         public override void Initialize()
         {
-            
-            RefreshApperance();
+
         }
 
         /// <summary>
@@ -67,11 +66,10 @@ namespace TileWorld_Mono
             }
         }
 
-        public override void LoadContent(ContentManager content)
+        public override void LoadContent()
         {
             //We dont need to load anything its already loaded by the static Appearances Class
             //we just need to refresh the apperance sprites using the keys
-            //RandomApperance();
             RandomApperance();
             RefreshApperance();
         }

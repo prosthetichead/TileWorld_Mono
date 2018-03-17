@@ -13,13 +13,14 @@ namespace TileWorld_Mono
     {
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
+        GameStateManager gameStateManager;
 
         int screenResWidth = 1280; //3840; //1920;  //1280 
         int screenResHeight = 720; //2160; //1080; //720
         RenderTarget2D mainRenderTarget;
 
         public static Camera camera;
-
+        public static Game Instance; //Static Refrance to This Game Instance (fuck you im lazy and I needed access to shit)
 
         //DEBUG MODE 
         public static bool debugMode = true;
@@ -28,6 +29,7 @@ namespace TileWorld_Mono
 
         public Game()
         {
+            Instance = this;
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
             
@@ -38,20 +40,34 @@ namespace TileWorld_Mono
 
             mainRenderTarget = new RenderTarget2D(GraphicsDevice, screenResWidth, screenResHeight);
 
-            this.Window.ClientSizeChanged += new System.EventHandler<System.EventArgs>(Window_ClientSizeChanged);
-
             camera = new Camera(GraphicsDevice.Viewport);
-
-            debugConsole = new DebugConsole(GraphicsDevice, 200);
+            debugConsole = new DebugConsole(200);
+            gameStateManager = new GameStateManager();
 
             IsFixedTimeStep = false;
         }
 
-        private void Window_ClientSizeChanged(object sender, EventArgs e)
+        /// <summary>
+        /// LoadContent will be called once per game and is the place to load
+        /// all of your content.
+        /// </summary>
+        protected override void LoadContent()
         {
-            //mainRenderTarget = new RenderTarget2D(GraphicsDevice, GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height);
+            // Create a new SpriteBatch, which can be used to draw textures.
+            spriteBatch = new SpriteBatch(GraphicsDevice);
+
+            //load static recorces used thought the game
+            Fonts.LoadContent(Content);
+            CharacterAppearance.LoadContent(Content);
+
+
+
+            debugConsole.LoadContent(Content);
+            // TODO: use this.Content to load your game content here
+
+
+            // 
         }
-        
 
         /// <summary>
         /// Allows the game to perform any initialization it needs to before starting to run.
@@ -64,23 +80,13 @@ namespace TileWorld_Mono
             base.Initialize();
 
             Inputs.Initialize();
-            GameStateManager.Instance.SetContent(Content);
-            GameStateManager.Instance.AddState("World", new WorldState(GraphicsDevice));
+
+            gameStateManager.SetContent(Content);
+            gameStateManager.AddState("MainMenu", new MainMenuState(GraphicsDevice));
+            gameStateManager.AddState("World", new WorldState(GraphicsDevice));
         }
 
-        /// <summary>
-        /// LoadContent will be called once per game and is the place to load
-        /// all of your content.
-        /// </summary>
-        protected override void LoadContent()
-        {
-            // Create a new SpriteBatch, which can be used to draw textures.
-            spriteBatch = new SpriteBatch(GraphicsDevice);
-            Fonts.LoadContent(Content);
-            debugConsole.LoadContent(Content);
-            // TODO: use this.Content to load your game content here
-
-        }
+       
 
         /// <summary>
         /// UnloadContent will be called once per game and is the place to unload
@@ -101,11 +107,10 @@ namespace TileWorld_Mono
             camera.Update(gameTime);
 
             //Update the input manager
-            Inputs.Update(gameTime); 
+            Inputs.Update(gameTime);
 
             //Update the current state
-            GameStateManager.Instance.Update(gameTime);
-            
+            gameStateManager.Update(gameTime);
 
             //update debugConsole
             debugConsole.Update(gameTime);
@@ -122,8 +127,8 @@ namespace TileWorld_Mono
             base.Draw(gameTime);
             GraphicsDevice.SetRenderTarget(mainRenderTarget);
             GraphicsDevice.Clear(Color.Aqua);
-            
-                GameStateManager.Instance.Draw(spriteBatch); //draw current state
+
+            gameStateManager.Draw(spriteBatch); //draw current state
             spriteBatch.Begin();
                 debugConsole.Draw(spriteBatch);
             spriteBatch.End();
@@ -142,5 +147,7 @@ namespace TileWorld_Mono
             spriteBatch.End();
 
         }
+
+
     }
 }

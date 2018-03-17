@@ -34,7 +34,7 @@ namespace TileWorld_Mono
         }
 
         List<DebugLine> lines;
-        Color defaultColor = Color.GreenYellow;
+        Color defaultColor = Color.FromNonPremultiplied(132, 208, 125, 255);
         GraphicsDevice graphicsDevice;
         Texture2D consoleBackground;
 
@@ -47,9 +47,9 @@ namespace TileWorld_Mono
 
         bool visible = false;
         
-        public DebugConsole(GraphicsDevice graphicsDevice, int maxHeight)
+        public DebugConsole(int maxHeight)
         {
-            this.graphicsDevice = graphicsDevice;
+            this.graphicsDevice = Game.Instance.GraphicsDevice;
             lines = new List<DebugLine>();
             currentHeight = 0;
             this.maxHeight = maxHeight;
@@ -63,7 +63,7 @@ namespace TileWorld_Mono
         {
             //setup console background
             consoleBackground = new Texture2D(graphicsDevice, 1, 1);
-            consoleBackground.SetData(new[] { new Color(0,0,0,.6f) });
+            consoleBackground.SetData(new[] {  Color.FromNonPremultiplied(37, 43, 37, 220) });
         }
 
         [Conditional("DEBUG")]
@@ -84,13 +84,17 @@ namespace TileWorld_Mono
 
             //update framrate counter
             framerate.Update(gameTime.ElapsedGameTime.TotalSeconds);
-            if (visible && currentHeight <= maxHeight)
+            if (visible && currentHeight < maxHeight)
             {
                 currentHeight = currentHeight + (gameTime.ElapsedGameTime.Milliseconds/4);
             }
+            else if(visible && currentHeight > maxHeight)
+            {
+                currentHeight = maxHeight;
+            }
             else if(!visible && currentHeight > 0)
             {
-                currentHeight = currentHeight - (gameTime.ElapsedGameTime.Milliseconds / 4);
+                currentHeight = currentHeight - (gameTime.ElapsedGameTime.Milliseconds/4);
             }
         }
 
@@ -102,19 +106,19 @@ namespace TileWorld_Mono
                 var bounds = new Rectangle(0, 0, graphicsDevice.Viewport.Width, (int)currentHeight);
 
                 spriteBatch.Draw(consoleBackground, bounds, Color.White);
-                Vector2 textPos = new Vector2(bounds.X + 10, bounds.Bottom - 25);
+                Vector2 textPos = new Vector2(bounds.X + 5, bounds.Bottom - 12);
                 int lineNumber = lines.Count - 1;
-                while (textPos.Y > (bounds.Top+10) && lineNumber >= 0)
+                while (textPos.Y > (bounds.Top+5) && lineNumber >= 0)
                 {
                     var line = lines[lineNumber];
-                    spriteBatch.DrawString(Fonts.ArmaFive, line.GetLineText(), textPos, line.color, 0f, Vector2.Zero, 2f, SpriteEffects.None, 1);
-                    textPos.Y -= 20;
+                    spriteBatch.DrawString(Fonts.ArmaFive, line.GetLineText(), textPos, line.color, 0f, Vector2.Zero, 1f, SpriteEffects.None, 1);
+                    textPos.Y -= 10;
                     lineNumber -= 1;
                 }
                 if (currentHeight > 10)
                 {
-                    spriteBatch.DrawString(Fonts.ArmaFive, "FPS: " + Math.Round(framerate.framerate, 2), new Vector2(5, -6), Color.Yellow, 0f, Vector2.Zero, 3f, SpriteEffects.None, 1);
-                }
+                    spriteBatch.DrawString(Fonts.ArmaFive, "FPS: " + Math.Round(framerate.framerate, 2), new Vector2(6, 0), Color.FromNonPremultiplied(94, 120, 93, 255), 0f, Vector2.Zero, 1f, SpriteEffects.None, 1);
+                      }
             }
         }
     }

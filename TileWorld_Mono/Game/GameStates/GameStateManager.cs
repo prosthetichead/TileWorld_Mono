@@ -20,20 +20,11 @@ namespace TileWorld_Mono
         private string activeStateKey;
         public string ActiveStateKey { get { return ActiveStateKey; } set { activeStateKey = value; } }
 
-        // Instance of the game state manager     
-        private static GameStateManager _instance;
-
-        public static GameStateManager Instance
+        public GameStateManager()
         {
-            get
-            {
-                if (_instance == null)
-                {
-                    _instance = new GameStateManager();
-                }
-                return _instance;
-            }
+           
         }
+
         public void SetContent(ContentManager content) => this.content = content;
 
         /// <summary>
@@ -44,12 +35,14 @@ namespace TileWorld_Mono
         /// <param name="stateKey">The Key to uniquely itentify the game state</param>
         public void AddState(string stateKey, GameState state)
         {
-            // Initialize the state
-            state.Initialize();
+            
             // Call the LoadContent on the state
             if (content != null)
                 state.LoadContent(content);
 
+            // Initialize the state, this also tells the state what manager is looking after it.
+            state.Initialize(this);
+                  
             // Add the state to the stack
             gameStates.Add(stateKey, state);
 

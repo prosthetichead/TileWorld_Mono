@@ -17,28 +17,23 @@ namespace TileWorld_Mono
         
         public WorldState(GraphicsDevice graphicsDevice) : base(graphicsDevice)
         {
-            
             world = new World("woopwoopwoopwoop2");
             player = new Player();  
 
         }
 
-        public override void Initialize()
+        public override void Initialize(GameStateManager gameStateManager)
         {
+            base.Initialize(gameStateManager);
             player.Initilize();
             Game.camera.FollowGameObject(player.Character); //follow the player around
         }
 
         public override void LoadContent(ContentManager content)
         {
-            //load all appearance textures
-            CharacterAppearance.LoadContent(content);
 
-
-            
             world.LoadContent(content);
             player.LoadContent(content);
-            
         }
 
         public override void UnloadContent()

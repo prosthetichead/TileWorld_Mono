@@ -26,13 +26,13 @@ namespace TileWorld_Mono
 
         public void Initilize()
         {
-            string t = FileSystem.ReadTextLocalStorage("player.json").Result;
+            //string t = FileSystem.ReadTextLocalStorage("player.json").Result;
         }
 
 
         public void LoadContent(ContentManager content)
         {
-            character.LoadContent(content);
+            character.LoadContent();
         }
 
         public void Update(GameTime gameTime)

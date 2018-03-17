@@ -12,14 +12,19 @@ namespace TileWorld_Mono
     public abstract class GameState
     {
         protected GraphicsDevice graphicsDevice;
-        
-            
+        protected GameStateManager gameStateManager;
+
 
         public GameState(GraphicsDevice graphicsDevice)
         {
             this.graphicsDevice = graphicsDevice;
         }
-        public abstract void Initialize();
+
+        public virtual void Initialize(GameStateManager gameStateManager)
+        {
+            this.gameStateManager = gameStateManager;
+        }
+
         public abstract void LoadContent(ContentManager content);
         public abstract void UnloadContent();
         public abstract void Update(GameTime gameTime);

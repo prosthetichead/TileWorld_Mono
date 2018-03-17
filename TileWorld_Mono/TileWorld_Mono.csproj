@@ -101,13 +101,15 @@
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
     <Compile Include="Game\Framerate.cs" />
-    <Compile Include="Game\DebugConsole.cs" />
+    <Compile Include="Game\UI\DebugConsole.cs" />
     <Compile Include="Game\FileSystem.cs" />
     <Compile Include="Game\GameObjects\Characters\CharacterAppearance.cs" />
     <Compile Include="Game\GameObjects\Characters\Character.cs" />
     <Compile Include="Game\Fonts.cs" />
     <Compile Include="Game\GameObjects\GameObject.cs" />
     <Compile Include="Game\GameObjects\GameObjectManager.cs" />
+    <Compile Include="Game\UI\SimpleMenu.cs" />
+    <Compile Include="Game\GameStates\MainMenuState.cs" />
     <Compile Include="Game\Sprite.cs" />
     <Compile Include="GamePage.xaml.cs">
       <DependentUpon>GamePage.xaml</DependentUpon>

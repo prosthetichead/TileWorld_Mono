@@ -11,7 +11,7 @@ namespace TileWorld_Mono
     static class Fonts
     {
         public static SpriteFont ArmaFive;
-
+        
         static public void LoadContent(ContentManager content)
         {
             ArmaFive = content.Load<SpriteFont>(@"fonts\Font-PF Arma Five");

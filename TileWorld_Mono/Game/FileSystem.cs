@@ -29,19 +29,21 @@ namespace TileWorld_Mono
 
         public static async Task WriteTextLocalStorage(string filePath, string text)
         {
+            Game.debugConsole.WriteLine("Disc IO Write for file " + filePath);
             StorageFolder storageFolder = ApplicationData.Current.LocalFolder;
             StorageFile File = await storageFolder.CreateFileAsync(filePath, CreationCollisionOption.ReplaceExisting);
-            Game.debugConsole.WriteLine("Disc IO Started for file " + filePath);
             await Windows.Storage.FileIO.WriteTextAsync(File, text);
-            Game.debugConsole.WriteLine("Disc IO Complete for file " + filePath);
+            Game.debugConsole.WriteLine("Disc IO Write Complete for file " + filePath);
 
         }
 
         public static async Task<String> ReadTextLocalStorage(string filePath)
         {
+            Game.debugConsole.WriteLine("Disc IO Read for file " + filePath);
             StorageFolder storageFolder = ApplicationData.Current.LocalFolder;
             StorageFile File = await storageFolder.CreateFileAsync(filePath, CreationCollisionOption.ReplaceExisting);
             string text = await Windows.Storage.FileIO.ReadTextAsync(File);
+            Game.debugConsole.WriteLine("Disc IO Read Complete for file " + filePath);
 
             return text;
         }
